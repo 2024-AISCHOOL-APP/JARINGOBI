@@ -1,38 +1,207 @@
-.App {
+.contain er {
+  width: 100%;
+  height: 100%;
+  padding-top: 50px;
+  background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header {
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.image {
+  width: 162px;
+  height: 172px;
+}
+
+.title {
+  width: 298px;
+  height: 57px;
+  color: black;
+  font-size: 40px;
+  font-family: '온글잎 류류체';
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+.description {
+  margin-right: 80px;
   text-align: center;
+  color: black;
+  font-size: 40px;
+  font-family: '온글잎 류류체';
+  font-weight: 400;
+  word-wrap: break-word;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.text {
+  font-family: '온글잎 류류체';
+  font-size: 30px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+@font-face {
+  font-family: '온글잎 류류체';
+  src: url('./../public/fonts/온글잎 류류체.ttf');
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.ipad-pro {
+  background-color: rgba(255, 255, 255, 1);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.ipad-pro .div {
+  background: linear-gradient(180deg, rgba(232, 168, 255, 0.5) 0%, rgba(255, 117, 128, 0.5) 100%);
+  background-color: rgba(255, 255, 255, 1);
+  height: 834px;
+  position: relative;
+  width: 1194px;
+}
+
+.ipad-pro .overlap {
+  height: 95px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 1194px;
+}
+
+.ipad-pro .rectangle {
+  background-color: #ffffff;
+  height: 95px;
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  width: 1194px;
+}
+
+.ipad-pro .xnix-line-copy {
+  height: 51px !important;
+  left: 1102px !important;
+  position: absolute !important;
+  top: 22px !important;
+  width: 51px !important;
+}
+
+.ipad-pro .xnix-line-edit {
+  height: 51px;
+  left: 1017px;
+  position: absolute;
+  top: 18px;
+  width: 51px;
+}
+
+.ipad-pro .text-wrapper-2 {
+  color: #000000;
+  font-family: "Ownglyph ryurue-Regular", Helvetica;
+  font-size: 40px;
+  font-weight: 400;
+  left: 45px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 22px;
+  width: 298px;
+}
+
+.ipad-pro .overlap-group {
+  height: 330px;
+  left: 160px;
+  position: absolute;
+  top: 127px;
+  width: 438px;
+}
+
+.ipad-pro .frame-1 {
+  left: 0 !important;
+  position: absolute !important;
+  top: 0 !important;
+}
+
+.ipad-pro .flexcontainer {
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  height: 159px;
+  left: 71px;
+  position: absolute;
+  top: 171px;
+  width: 253px;
+}
+
+.ipad-pro .text {
+  align-self: stretch;
+  color: #000000;
+  font-family: "Ownglyph ryurue-Regular", Helvetica;
+  font-size: 40px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+}
+
+.ipad-pro .span {
+  color: #000000;
+  font-family: "Ownglyph ryurue-Regular", Helvetica;
+  font-size: 40px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.ipad-pro .p {
+  color: #000000;
+  font-family: "Ownglyph ryurue-Regular", Helvetica;
+  font-size: 36px;
+  font-weight: 400;
+  left: 665px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 211px;
+}
+
+.ipad-pro .div-wrapper {
   align-items: center;
+  background-color: #b0ce6b;
+  border-radius: 43px;
+  display: flex;
+  gap: 10px;
+  height: 66px;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  left: 702px;
+  padding: 18px 43px;
+  position: absolute;
+  top: 447px;
+  width: 293px;
 }
 
-.App-link {
-  color: #61dafb;
+.ipad-pro .text-wrapper-3 {
+  color: #000000;
+  font-family: "Ownglyph ryurue-Regular", Helvetica;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.calendar {
+  padding-left : '150px';
+  padding-Right:'150px';
+  padding-Top : '50px';
+  padding-Bottom:'50px';
+  background : 'linear-gradient(180deg, rgba(232, 168, 255, 0.50) 0%, rgba(255, 117, 128, 0.50) 100%)'
 }

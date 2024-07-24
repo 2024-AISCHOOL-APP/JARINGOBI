@@ -1,0 +1,69 @@
+/* CalendarStyle.css */
+
+/* 캘린더 화면 영역 설정*/
+.App { /* 전체 APP에 대한 영역 */
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* 전체 화면 높이 설정 */
+    margin: 0;
+    overflow: hidden; /* 화면 오버플로우 방지 */
+}
+
+.full-calendar { /* 퓰캘린더의 남은 공간 영역 */
+    flex: 1;
+    overflow: hidden; /* 화면 오버플로우 방지 */
+}
+
+.fc { /* 풀캘린더 자체 높이 조정 */
+    height: 100% !important; /* 풀캘린더가 공간의 전체 높이 영역을 차지하는 확인 */
+}
+
+.fc-event-title-container{
+    color: red;
+    text-align: right;
+}
+.modal-dialog { /* 응답성 향상을 위한 모달 영역 조정 */
+    max-width: 90%; /* 응답성 향상을 위한 모달 폭 길이 조절 */
+    width: auto;
+}
+
+/* 캘린더 화면 상단 여백 설정*/
+.fc-header-toolbar {
+
+    padding-top: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+@font-face {
+    font-family: 'Ongleaf-Ryuryu';
+    src: url('../../public/fonts/온글잎 류류체.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* 평일 날짜: 검은색 */
+.fc-day a {
+    color: black;
+}
+
+/* 일요일 날짜: 빨간색 */
+.fc-day-sun a {
+    color: orangered;
+}
+  
+/* 토요일 날짜: 파란색 */
+.fc-day-sat a {
+    color: skyblue;
+}
+
+/* 금액 입력 칸 크기 조절 */
+.eventNumInput { 
+    width: 42%;
+}
+
+/* 제목, 본문 입력 칸 크기 조절 */
+.eventTextInput {
+    width: 100%;
+}

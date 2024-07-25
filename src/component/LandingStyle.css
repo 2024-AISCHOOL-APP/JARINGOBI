@@ -1,23 +1,29 @@
-:root{
+:root {
     /*margin*/
     --m-left: 400px;
     --m-top: 150px;
     /* font*/
-    --f: 'Roboto'
+    --f: 'Roboto';
 }
+
 /* Navbar */
 .Navbar {
     opacity: 0.5;
     width: auto;
-    position:relative;
+    position: relative;
 }
-.Container{
+
+.Container {
     background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
 }
-.Navlogo{
+
+.Navlogo {
     font-family: var(--f);
     color: black;
 }
+
+
+
 
 .landing-page {
     width: 100%;

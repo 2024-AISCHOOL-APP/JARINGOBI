@@ -17,7 +17,8 @@ const Landing = () => {
                         </Nav>
                         <Nav className="ml-auto">
                             <Nav.Link href="/Main"><img src='img/con0.png' alt="Link Icon" /></Nav.Link>
-                            <Nav.Link href="#about"><img src='img/con1.png' alt='Link Icon' /></Nav.Link>
+                            <Nav.Link href="#about"><img src='img/con3.png' alt='Link Icon' /></Nav.Link>
+                            <Nav.Link href="/Community"><img src='img/con1.png' alt='Link Icon' /></Nav.Link>
                             <Nav.Link href="#about"><img src='img/con2.png' alt='Link Icon' /></Nav.Link>
                         </Nav>
                     </Navbar.Collapse>

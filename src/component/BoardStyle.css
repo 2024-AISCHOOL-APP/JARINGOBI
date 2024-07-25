@@ -19,6 +19,9 @@
     color: black;
 }
 
+
+
+
 .App { /* 전체 APP에 대한 영역 */
     display: flex;
     flex-direction: column;

@@ -1,25 +1,33 @@
-:root{
+:root {
     /*margin*/
     --m-left: 400px;
     --m-top: 150px;
     /* font*/
-    --f: 'Roboto'
+    --f: 'Roboto';
+    /*color*/
+    --b: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
 }
 /* Navbar */
 .Navbar {
     opacity: 0.5;
     width: auto;
-    position:relative;
+    position: relative;
 }
-.Container{
-    background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+.Container {
+    background: var(--b)
 }
-.Navlogo{
+.Navlogo {
     font-family: var(--f);
     color: black;
 }
 
-.pennybody{
+
+.Logincontainer {
+    display: flex;
+    align-items: flex-start;
+}
+
+.pennybody {
     width: 200px;
     height: 200px;
     border-color: black;
@@ -28,29 +36,23 @@
     margin-top: var(--m-top);
 }
 
-.text{
+.text {
     font-family: var(--f);
     margin-left: var(--m-left);
     padding-top: 20px;
 }
 
-.Logincontainer {
-    display: flex;
-    align-items: flex-start;
-
-  }
-  
-  .left-section {
+.left-section {
     display: flex;
     justify-content: ;
     align-items: ;
     flex-direction: column;
-  }
-  
-  .right-section {
+}
+
+.right-section {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-top: var(--m-top);
     margin-left: 150px;
-  }
+}

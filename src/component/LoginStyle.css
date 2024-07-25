@@ -5,7 +5,7 @@
     /* font*/
     --f: 'Roboto';
     /*color*/
-    --b: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+    --Cb: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
 }
 /* Navbar */
 .Navbar {
@@ -14,7 +14,7 @@
     position: relative;
 }
 .Container {
-    background: var(--b)
+    background: var(--Cb)
 }
 .Navlogo {
     font-family: var(--f);

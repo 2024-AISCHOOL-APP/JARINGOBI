@@ -1,0 +1,217 @@
+:root{
+    /*margin*/
+    --m-left: 400px;
+    --m-top: 150px;
+    /* font*/
+    --f: 'Roboto'
+}
+/* Navbar */
+.Navbar {
+    opacity: 0.5;
+    width: auto;
+    position:relative;
+}
+.Container{
+    background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+}
+.Navlogo{
+    font-family: var(--f);
+    color: black;
+}
+
+.landing-page {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: white;
+}
+
+.logo-section {
+    position: relative;
+    top: 127px;
+    left: 160px;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.logo-image {
+    width: 162px;
+    height: 172px;
+}
+
+.logo-text {
+    width: 298px;
+    height: 57px;
+    color: black;
+    font-size: 40px;
+    font-family: 'Ownglyph ryurue';
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.main-text {
+    position: absolute;
+    top: 299px;
+    left: 194px;
+    color: black;
+    font-size: 36px;
+    font-family: 'Roboto';
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.description {
+    position: absolute;
+    top: 207px;
+    left: 626px;
+    text-align: center;
+    color: black;
+    font-size: 32px;
+    font-family: 'Roboto';
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.login-button {
+    width: 265px;
+    height: 60px;
+    position: absolute;
+    top: 440px;
+    left: 730px;
+    background: #B0CE6B;
+    border-radius: 43px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 43px;
+}
+
+.login-text {
+    color: black;
+    font-size: 24px;
+    font-family: 'Roboto';
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.icons {
+    position: absolute;
+    top: 19px;
+    left: 944px;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 27px;
+}
+
+.icon-wrapper {
+    width: 51px;
+    height: 51px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-square {
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    border: 1.5px black solid;
+}
+
+.icon-small-square {
+    width: 21.78px;
+    height: 21.78px;
+    position: absolute;
+    top: 12.22px;
+    left: 12.22px;
+    border: 1.5px black solid;
+}
+
+.icon-triangle {
+    width: 17.85px;
+    height: 19.89px;
+    position: absolute;
+    border: 1.5px black solid;
+}
+
+.icon-image {
+    width: 27.77px;
+    height: 27.89px;
+    position: absolute;
+    top: 3.97px;
+    left: 0;
+    border: 1.5px black solid;
+}
+
+.icon-border {
+    width: 29.75px;
+    height: 29.75px;
+    position: absolute;
+    border: 1.5px black solid;
+}
+.purple-button {
+    background-color: #6f42c1 !important;
+    border-color: #6f42c1;
+    color: white;
+  }
+  
+  
+  .logo-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .logo-image {
+    width: 100px; /* 필요에 따라 크기 조정 */
+  }
+  
+  .logo-text {
+    font-size: 24px; /* 필요에 따라 크기 조정 */
+    font-family: 'Ownglyph ryurue';
+    font-weight: 400;
+    margin-left: 10px;
+  }
+  
+  .main-text, .description {
+    text-align: center;
+    font-family: 'Roboto';
+    font-weight: 400;
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px; /* 필요에 따라 간격 조정 */
+    height: 100vh;
+    padding: 20px;
+  }
+  
+  .grid-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Carosel */
+  .Carosel {
+      padding-left: 400px;
+      align-items: center;
+  }
+
+  .Carousel img {
+      width: 800px;
+      height: 500px;
+  }
+
+  .grid-container{
+    padding-left: 100px;
+    padding-right: 100px;
+  }

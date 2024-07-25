@@ -1,4 +1,26 @@
-/* CalendarStyle.css */
+
+:root{
+    /*margin*/
+    --m-left: 400px;
+    --m-top: 150px;
+    /* font*/
+    --f: 'Roboto'
+}
+/* Navbar */
+.Navbar {
+    opacity: 0.5;
+    width: auto;
+    position:relative;
+}
+.Container{
+    background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+}
+.Navlogo{
+    font-family: var(--f);
+    color: black;
+}
+
+
 a{
     text-decoration: none !important;
 }
@@ -75,3 +97,8 @@ a{
 .fc .fc-daygrid-day-frame{
     cursor: pointer;
 }
+/* .full-calendar{
+    height: 'calc(100vh - 56px)';
+    padding-left: '150px';
+    padding-right: '150px'
+} */

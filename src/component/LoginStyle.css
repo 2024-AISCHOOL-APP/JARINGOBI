@@ -1,0 +1,56 @@
+:root{
+    /*margin*/
+    --m-left: 400px;
+    --m-top: 150px;
+    /* font*/
+    --f: 'Roboto'
+}
+/* Navbar */
+.Navbar {
+    opacity: 0.5;
+    width: auto;
+    position:relative;
+}
+.Container{
+    background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+}
+.Navlogo{
+    font-family: var(--f);
+    color: black;
+}
+
+.pennybody{
+    width: 200px;
+    height: 200px;
+    border-color: black;
+    border-radius: 2em;
+    margin-left: var(--m-left);
+    margin-top: var(--m-top);
+}
+
+.text{
+    font-family: var(--f);
+    margin-left: var(--m-left);
+    padding-top: 20px;
+}
+
+.Logincontainer {
+    display: flex;
+    align-items: flex-start;
+
+  }
+  
+  .left-section {
+    display: flex;
+    justify-content: ;
+    align-items: ;
+    flex-direction: column;
+  }
+  
+  .right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: var(--m-top);
+    margin-left: 150px;
+  }

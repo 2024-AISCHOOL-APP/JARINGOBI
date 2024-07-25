@@ -1,5 +1,7 @@
 /* CalendarStyle.css */
-
+a{
+    text-decoration: none !important;
+}
 /* 캘린더 화면 영역 설정*/
 .App { /* 전체 APP에 대한 영역 */
     display: flex;
@@ -19,8 +21,11 @@
 }
 
 .fc-event-title-container{
-    color: red;
     text-align: right;
+}
+.fc-h-event{
+    background: white;
+    border: 1px solid white
 }
 .modal-dialog { /* 응답성 향상을 위한 모달 영역 조정 */
     max-width: 90%; /* 응답성 향상을 위한 모달 폭 길이 조절 */
@@ -29,7 +34,6 @@
 
 /* 캘린더 화면 상단 여백 설정*/
 .fc-header-toolbar {
-
     padding-top: 1em;
     padding-left: 1em;
     padding-right: 1em;
@@ -66,4 +70,8 @@
 /* 제목, 본문 입력 칸 크기 조절 */
 .eventTextInput {
     width: 100%;
+}
+
+.fc .fc-daygrid-day-frame{
+    cursor: pointer;
 }

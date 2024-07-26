@@ -1,0 +1,103 @@
+:root{
+    /*margin*/
+    --m-left: 400px;
+    --m-top: 150px;
+    /* font*/
+    --f: 'Roboto'
+}
+
+/* Navbar */
+.Navbar {
+    opacity: 0.5;
+    width: auto;
+    position:relative;
+}
+.Container{
+    background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+}
+.Navlogo{
+    font-family: var(--f);
+    color: black;
+}
+
+
+.App { /* 전체 APP에 대한 영역 */
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* 전체 화면 높이 설정 */
+    margin: 0;
+    overflow: hidden; /* 화면 오버플로우 방지 */
+}
+
+/* 글쓰기창 타이틀 설정 */
+.writePageTitle {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+/* 입력칸 공통 설정 */
+.titleInput, .contentInput {
+    width: 100%;
+    border-width: 2px;
+}
+
+/*제목 입력칸 설정*/
+.titleInput {
+    margin-top: 1rem;
+    height: 35px;
+}
+
+/*본문 입력칸 설정 */
+.contentInput {
+    margin-bottom: 1rem;
+    height: 400px;
+    resize: none;
+}
+
+
+/* 저장 버튼 설정*/
+.saveButton {
+    color: #0d6efd;
+    background: white;
+    border-color: auto;
+}
+.saveButton:hover {
+    color: white;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* 초기화 버튼 설정 */
+.resetButton {
+    color: black;
+    background: white;
+    border-color: black;
+}
+.resetButton:hover {
+    color: white;
+    background-color: black;
+}
+
+/* 취소 버튼 설정 */
+.removeButton {
+    color: orangered;
+    background: white;
+    border-color: orangered;
+}
+.removeButton:hover {
+    color: white;
+    background-color: orangered;
+    border-color: orangered;
+}
+
+/* 삭제 버튼 설정 */
+.deleteButton {
+    color: red;
+    background: white;
+    border-color: red;
+}
+.deleteButton:hover {
+    color: white;
+    background-color: red;
+    border: none;
+}

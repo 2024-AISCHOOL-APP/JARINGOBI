@@ -1,114 +1,119 @@
 :root{
-    /*margin*/
-    --m-left: 400px;
-    --m-top: 150px;
-    /* font*/
-    --f: 'Roboto'
+  /*margin*/
+  --m-left: 400px;
+  --m-top: 150px;
+  /* font*/
+  --f: 'Roboto'
 }
+
 /* Navbar */
 .Navbar {
-    opacity: 0.5;
-    width: auto;
-    position:relative;
+  opacity: 0.5;
+  width: auto;
+  position:relative;
 }
 .Container{
-    background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+  background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
 }
 .Navlogo{
-    font-family: var(--f);
-    color: black;
+  font-family: var(--f);
+  color: black;
 }
-
-
 
 
 .App { /* 전체 APP에 대한 영역 */
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* 전체 화면 높이 설정 */
-    margin: 0;
-    overflow: hidden; /* 화면 오버플로우 방지 */
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* 전체 화면 높이 설정 */
+  margin: 0;
+  overflow: hidden; /* 화면 오버플로우 방지 */
+}
+
+/* 게시판 타이틀 설정 */
+.communityTitle {
+font-size: x-large;
+font-weight: bold;
 }
 
 /* 테이블 화면 영역 설정*/
 .table {
-    text-align: center;
-    border-collapse: collapse;
-    margin-top: 30px;
+  text-align: center;
+  border-collapse: collapse;
+  margin-top: 30px;
 }
 
 .tbody {
-    background-color: white; /* 적용 안됨 */
+  background-color: white; /* 적용 안됨 */
 }
 
 /* 페이징 버튼 설정*/
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
-  }
- 
-  ul {
-    list-style: none;
-    padding: 0;
-  }
- 
-  ul.pagination li {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #e2e2e2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-  }
- 
-  ul.pagination li:first-child{
-    background: white;
-    border-radius: 5px 0 0 5px;
-  }
- 
-  ul.pagination li:last-child{
-    background: white;
-    border-radius: 0 5px 5px 0;
-  }
- 
-  ul.pagination li a {
-    text-decoration: none;
-    color: #E1BEE7;
-    font-size: rem;
-  }
- 
-  ul.pagination li.active a {
-    color: palevioletred;
-  }
- 
-  ul.pagination li.active {
-    background-color: whitesmoke;
-  }
- 
-  ul.pagination li a:hover,
-  ul.pagination li a.active {
-    color: palevioletred;
-  }
- 
-  .page-selection {
-    width: 48px;
-    height: 30px;
-    color: #E1BEE7;
-  }
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul.pagination li {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #e2e2e2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+}
+
+ul.pagination li:first-child{
+  background: white;
+  border-radius: 5px 0 0 5px;
+}
+
+ul.pagination li:last-child{
+  background: white;
+  border-radius: 0 5px 5px 0;
+}
+
+ul.pagination li a {
+  text-decoration: none;
+  color: #E1BEE7;
+  font-size: rem;
+}
+
+ul.pagination li.active a {
+  color: palevioletred;
+}
+
+ul.pagination li.active {
+  background-color: whitesmoke;
+}
+
+ul.pagination li a:hover,
+ul.pagination li a.active {
+  color: palevioletred;
+}
+
+.page-selection {
+  width: 48px;
+  height: 30px;
+  color: #E1BEE7;
+}
 
 
 /* 글쓰기 버튼 설정*/
 .writeButton {
-    color: #E1BEE7;
-    background: white;
-    border-color: #E1BEE7;
+  color: #E1BEE7;
+  background: white;
+  border-color: #E1BEE7;
 }
 
 .writeButton:hover {
-    color: white;
-    background-color: #E1BEE7;
-    border: none;
+  color: white;
+  background-color: #E1BEE7;
+  border-color: #E1BEE7;
 }

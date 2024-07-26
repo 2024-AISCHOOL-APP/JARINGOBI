@@ -1,6 +1,6 @@
 import './CalendarStyle.css'; // 캘린더 스타일 설정
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from "@fullcalendar/interaction"; // 날짜칸 클릭 기능
@@ -9,10 +9,14 @@ import Swal from 'sweetalert2'
 
 import "bootstrap/dist/css/bootstrap.min.css"; // 부트스트랩 기능
 import { Modal, Navbar, Nav, Container } from 'react-bootstrap'; // 모달 팝업 및 네비게이션 바 기능
+import Spinner from 'react-bootstrap/Spinner';
 
 function MyCalendar() {
     const [modalOpen, setModalOpen] = useState(false); // 모달 state 변수
     const [selectedDate, setSelectedDate] = useState(""); // 선택된 날짜 state 변수
+    const [receiptData, setReceiptData] = useState("");
+    const [isLoading, setIsLoading] = useState(false); // 로딩 상태 state 변수
+    const [titles,setTitles] = useState('')
     const [events, setEvents] = useState([ // 이벤트 state 변수
         { title: '12300', date: '2024-07-15', textColor: 'red' },
         { title: '49000', date: '2024-07-25', textColor: 'red' },
@@ -57,7 +61,7 @@ function MyCalendar() {
                 icon: "error",
                 title: "등록 실패",
                 text: "제목과 금액을 작성해주세요",
-              });
+            });
             return;
         }
 
@@ -105,21 +109,102 @@ function MyCalendar() {
 
         if (file) {
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = async (e) => {
                 Swal.fire({
                     title: "Your uploaded picture",
                     imageUrl: e.target.result,
-                    imageAlt: "The uploaded picture"
+                    imageAlt: "The uploaded picture",
+                    showCancelButton: true,
+                    confirmButtonText: "OK",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const formData = new FormData();
+                        formData.append("file", file);
+
+                        setIsLoading(true); // 파일 업로드 중 로딩 상태 설정
+
+                        fetch("http://localhost:8000/receive_receipt", {
+                            method: "POST",
+                            body: formData,
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                setIsLoading(false); // 파일 업로드 완료 후 로딩 상태 해제
+                                // Swal.fire({
+                                //     title: "Receipt uploaded",
+                                //     text: "Server response: " + JSON.stringify(data),
+                                //     imageUrl: URL.createObjectURL(file),
+                                //     imageAlt: "Uploaded receipt",
+                                // });
+
+                                // 여기서 final_receipt_data 변수에 데이터를 담을 수 있음
+                                const final_receipt_data = data;
+                                console.log(final_receipt_data);
+                                setReceiptData(data);
+                                // }
+                            })
+                            .catch((error) => {
+                                setIsLoading(false); // 파일 업로드 실패 시 로딩 상태 해제
+                                console.error("Error:", error);
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: "Something went wrong!",
+                                });
+                            });
+                    }
                 });
             };
             reader.readAsDataURL(file);
         }
     };
 
+    // useEffect 사용 예시
+    useEffect(() => {
+        // 여기에 수행할 작업을 넣습니다.
+        // 예를 들어, receiptData 상태가 변경될 때마다 입력 요소에 값을 설정하는 작업 등을 수행할 수 있습니다.
+        if (receiptData) {
+            if (moneyRef.current) moneyRef.current.value = receiptData.totalPrice;
+            if (titleRef.current) titleRef.current.value = receiptData.storeName;
+            if (memoRef.current) memoRef.current.value = formatReceiptData();
+        }
+    }, [receiptData]);
+
+
+    // receiptData를 포맷하는 함수
+    const formatReceiptData = () => {
+        if (!receiptData) return "";
+
+        // items 포맷
+        const formattedItems = receiptData.items.map(item => (
+            `${item.itemName.padEnd(20)} ${item.itemCount.padEnd(10)} ${item.itemUnitPrice.padEnd(10)} ${item.itemTotalPrice}`
+        )).join('\n');
+
+        // 전체 포맷
+        const formattedText = `매장 이름 : ${receiptData.storeName}\n
+매장 주소 : ${receiptData.storeAddress}\n
+매장 전화번호 : ${receiptData.storeTel}\n
+항목                   수량             단가             금액\n${formattedItems}\n
+총 결제 금액    ${receiptData.totalPrice}`;
+
+        return formattedText;
+    };
+
+    function eventClick(info){
+
+        // moneyRef.current.value = receiptData.totalPrice;
+        // const titless = info.event.title;
+        // // memoRef.current.value = formatReceiptData();
+        // // setModalOpen(true); // 모달창 열기
+        console.log(info.event.title);
+        // console.log(titless,"dddddddd");
+  
+    }
+
     return (
         <div className="App">
             <Navbar bg="white" variant="dark" expand="lg" style={{ opacity: 0.5, width: '100%' }}>
-                <Container style={{ background: 'linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%)'}}>
+                <Container style={{ background: 'linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%)' }}>
                     <Navbar.Brand href="#home" style={{ fontFamily: 'roboto', color: 'black' }}>PennyWise</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
@@ -133,7 +218,7 @@ function MyCalendar() {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            <Container fluid style={{ height: 'calc(100vh - 56px)', paddingLeft: '150px', paddingRight: '150px'}}>
+            <Container fluid style={{ height: 'calc(100vh - 56px)', paddingLeft: '150px', paddingRight: '150px' }}>
                 <FullCalendar
                     headerToolbar={{ // 달력 상단 설정
                         left: "prev next", // 왼쪽에 이전/다음달 및 오늘 버튼
@@ -143,6 +228,7 @@ function MyCalendar() {
                     initialView="dayGridMonth"
                     plugins={[dayGridPlugin, interactionPlugin]}
                     events={events}
+                    eventClick={eventClick}
                     locale={koLocale} // 한국어로 설정
                     dateClick={handleDateClick} // 날짜 클릭 시 이벤트 발생
                     height="100%" // 캘린더 높이를 100%로 설정
@@ -169,14 +255,19 @@ function MyCalendar() {
                                 </option>
                             ))}
                         </select>
-                        <br/>
+                        <br />
                         <input name='money' type="number" min="0" placeholder="금액 입력" ref={moneyRef}></input>
                         <br></br>
                         <br></br>
                         <input name='title' type="text" placeholder="제목" ref={titleRef}></input>
                         <button onClick={file}>영수증 등록</button>
+                        {isLoading && (
+                            <Spinner animation="border" role="status" className="ml-3">
+                                <span className="sr-only"></span>
+                            </Spinner>
+                        )}
                         <br></br>
-                        <textarea name="memo" placeholder="메모 입력" className="eventTextInput" ref={memoRef}></textarea>
+                        <textarea name="memo" placeholder="메모 입력" className="eventTextInput" ref={memoRef} style={{ height: '400px' }}></textarea>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>

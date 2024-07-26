@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Navbar, Nav, Container } from 'react-bootstrap';
+import { Navbar, Nav, Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './LoginStyle.css'
@@ -29,7 +29,7 @@ const Login = () => {
                     <p className="text">현명한 소비<br />pennywise</p>
                 </div>
                 <div className="right-section">
-                    <Form>
+                    <Form action='/main' method='post'>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>ID</Form.Label>
                             <Form.Control type="text" placeholder="아이디를 입력하세요" />
@@ -40,6 +40,9 @@ const Login = () => {
                         </Form.Group>
                         <Button variant="primary" href='/Main'>
                             시작하기
+                        </Button>{' '}
+                        <Button href='/Signup' variant='primary'>
+                        회원가입
                         </Button>
                     </Form>
                 </div>

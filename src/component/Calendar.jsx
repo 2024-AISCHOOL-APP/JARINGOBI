@@ -115,6 +115,7 @@ function MyCalendar() {
             reader.readAsDataURL(file);
         }
     };
+    
 
     return (
         <div className="App">

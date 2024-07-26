@@ -111,7 +111,7 @@ function MyCalendar() {
             const reader = new FileReader();
             reader.onload = async (e) => {
                 Swal.fire({
-                    title: "Your uploaded picture",
+                    title: "영수증 등록이 완료되었습니다",
                     imageUrl: e.target.result,
                     imageAlt: "The uploaded picture",
                     showCancelButton: true,
@@ -158,6 +158,7 @@ function MyCalendar() {
             reader.readAsDataURL(file);
         }
     };
+    
 
     // useEffect 사용 예시
     useEffect(() => {
@@ -203,22 +204,23 @@ function MyCalendar() {
 
     return (
         <div className="App">
-            <Navbar bg="white" variant="dark" expand="lg" style={{ opacity: 0.5, width: '100%' }}>
-                <Container style={{ background: 'linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%)' }}>
-                    <Navbar.Brand href="#home" style={{ fontFamily: 'roboto', color: 'black' }}>PennyWise</Navbar.Brand>
+            <Navbar className='Navbar'>
+                <Container className='Container'>
+                    <Navbar.Brand className='Navlogo' href="/">PennyWise</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            {/* <Nav.Link href="#home" style={{ color: 'black' }}>Home</Nav.Link> */}
                         </Nav>
                         <Nav className="ml-auto">
-                            <Nav.Link href="#link"><img src='./img/con0.png' alt="Link Icon" /></Nav.Link>
-                            <Nav.Link href="#about"><img src='./img/con1.png' alt='Link Icon' /></Nav.Link>
+                            <Nav.Link href="/Main"><img src='img/con0.png' alt="Link Icon" /></Nav.Link>
+                            <Nav.Link href="#about"><img src='img/con3.png' alt='Link Icon' /></Nav.Link>
+                            <Nav.Link href="/Community"><img src='img/con1.png' alt='Link Icon' /></Nav.Link>
+                            <Nav.Link href="#about"><img src='img/con2.png' alt='Link Icon' /></Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            <Container fluid style={{ height: 'calc(100vh - 56px)', paddingLeft: '150px', paddingRight: '150px' }}>
+            <Container  className='fullContainer' fluid style={{ height: 'calc(100vh - 56px)', paddingLeft: '150px', paddingRight: '150px'}}>
                 <FullCalendar
                     headerToolbar={{ // 달력 상단 설정
                         left: "prev next", // 왼쪽에 이전/다음달 및 오늘 버튼

@@ -1,4 +1,27 @@
-/* CalendarStyle.css */
+:root{
+    /*margin*/
+    --m-left: 400px;
+    --m-top: 150px;
+    /* font*/
+    --f: 'Roboto'
+}
+/* Navbar */
+.Navbar {
+    opacity: 0.5;
+    width: auto;
+    position:relative;
+}
+.Container{
+    background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+}
+.Navlogo{
+    font-family: var(--f);
+    color: black;
+}
+
+
+
+
 a{
     text-decoration: none !important;
 }
@@ -40,8 +63,8 @@ a{
 }
 
 @font-face {
-    font-family: 'Ongleaf-Ryuryu';
-    src: url('../../public/fonts/온글잎 류류체.ttf') format('truetype');
+    font-family: 'Roboto';
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
     font-weight: normal;
     font-style: normal;
 }

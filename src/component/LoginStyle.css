@@ -1,58 +1,80 @@
 :root {
-    /*margin*/
-    --m-left: 400px;
-    --m-top: 150px;
-    /* font*/
-    --f: 'Roboto';
-    /*color*/
-    --Cb: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+  /*margin*/
+  --m-left: 400px;
+  --m-top: 150px;
+  /* font*/
+  --f: 'Roboto';
+  /*color*/
+  --Cb: linear-gradient(180deg, #e1bee7 0%, #f8bbd0 50%, #ffffff 100%);
 }
 /* Navbar */
 .Navbar {
-    opacity: 0.5;
-    width: auto;
-    position: relative;
+  opacity: 0.5;
+  width: auto;
+  position: relative;
 }
 .Container {
-    background: var(--Cb)
+  background: var(--Cb);
 }
 .Navlogo {
-    font-family: var(--f);
-    color: black;
+  font-family: var(--f);
+  color: black;
 }
 
-
 .Logincontainer {
-    display: flex;
-    align-items: flex-start;
+  display: flex;
+  align-items: flex-start;
 }
 
 .pennybody {
-    width: 200px;
-    height: 200px;
-    border-color: black;
-    border-radius: 2em;
-    margin-left: var(--m-left);
-    margin-top: var(--m-top);
+  width: 200px;
+  height: 200px;
+  border-color: black;
+  border-radius: 2em;
+  margin-left: var(--m-left);
+  margin-top: var(--m-top);
 }
 
 .text {
-    font-family: var(--f);
-    margin-left: var(--m-left);
-    padding-top: 20px;
+  font-family: var(--f);
+  margin-left: var(--m-left);
+  padding-top: 20px;
 }
 
 .left-section {
-    display: flex;
-    /* justify-content: ;
+  display: flex;
+  /* justify-content: ;
     align-items: ; */
-    flex-direction: column;
+  flex-direction: column;
 }
 
 .right-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: var(--m-top);
-    margin-left: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: var(--m-top);
+  margin-left: 150px;
+}
+
+.buttons {
+  width: 100%;
+  padding: 20px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.buttons button {
+  width: 30%;
+  margin-left: 5px;
+  background: none;
+}
+
+.signup {
+  margin-left: 10px;
+}
+
+.kakao {
+  border: none;
+}
+.kakao img {
+  width: 100%;
 }

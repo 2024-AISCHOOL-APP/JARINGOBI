@@ -11,15 +11,15 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Response/>}/>
-        <Route path='/Main' element={<Calendar/>}/>
-        <Route path='/Login' element={<Login/>}/>
-        <Route path='/Community' element={<Board/>}/>
+        <Route path='/' element={<Response />} />
+        <Route path='/Main' element={<Calendar />} />
+        <Route path='/auth' element={<Login />} />
+        <Route path='/Community' element={<Board />} />
         {/* <Route path='/WritePost' element={<WritePost/>}/> */}
-        <Route path='/Signup' element={<Signup/>}/>
+        <Route path='/Signup' element={<Signup />} />
       </Routes>
     </>
-  )
+  );
 }
 
 export default App;

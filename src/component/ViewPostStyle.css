@@ -1,0 +1,50 @@
+.post-title, .post-content {
+    background-color: #fafafa;
+    border-bottom: 1px solid #ddd;
+    padding: 0.75rem; /* 여백 */
+    border-radius: 5px; /* 모서리 둥글게 */
+}
+
+.post-title {
+    font-size: 1.75rem; 
+    font-weight: 600; 
+    padding: 0.75rem; 
+}
+
+.post-content {
+    min-height: 200px;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+
+.titleInput, .contentInput {
+    font-size: 16px;
+    border-radius: 0.25rem;
+}
+
+.deleteButton, .reWriteButton {
+    font-weight: bold;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+}
+
+.deleteButton:hover, .reWriteButton:hover {
+    opacity: 0.9;
+}
+
+.deleteButton {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+}
+
+.reWriteButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+}
+
+.deleteButton:hover, .reWriteButton:hover {
+    opacity: 0.9;
+}

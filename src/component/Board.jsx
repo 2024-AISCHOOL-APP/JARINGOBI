@@ -9,6 +9,7 @@ import Pagination from 'react-js-pagination'; // 페이징 버튼 기능
 import "bootstrap/dist/css/bootstrap.min.css"; // 부트스트랩 기능
 import { Navbar, Nav, Container, Modal } from 'react-bootstrap'; // 모달 팝업 및 네비게이션 바 기능
 import WritePostModal from './WritePostModal'; // WritePost 모달 컴포넌트 import
+import ViewPostModal from './ViewpostModal';// ViewPost 모달 컴포넌트 import
 
 function Board() {
     const [postList, setPostList] = useState([]); // 서버에서 받아올 게시글 데이터
@@ -21,30 +22,66 @@ function Board() {
         setPage(pageNumber);
     };
 
-    // 서버에서 게시글 데이터 받아와 표시
-    const getPostList = async () => { // 게시글 데이터 할당
+    // 서버에서 게시글 데이터 받아와 테이블에 표시
+    const getPostList = async () => {
         try {
-            const response = await axios.post('http://localhost:8085');
-            const data = response.data;
-            const sortedData = data.sort((a, b) => new Date(b.date) - new Date(a.date)); // 날짜를 기준으로 역순 정렬
-            setPostList(sortedData); // postList 변수로 할당
+            console.log('게시판 목록 요청 시작');
+            const response = await axios.get('http://localhost:8000'); // API 엔드포인트 확인
+        
+            console.log('게시글 목록 응답 수신:', response.data);
+            const data = response.data // 서버가 변환한 데이터 가져오기
+        
+            setPostList(data); // 역순 정렬된 데이터를 postList 변수에 저장
+        
         } catch (error) {
-            console.error(error);
-            // alert('서버와의 연결에 에러가 발생했습니다!')
-        }
+            console.error('게시글 요청 에러:', error);
+            if (error.response) {
+                // 요청이 전송되었고, 서버는 200 외의 상태 코드로 응답했습니다.
+                const Data = error.response.data;
+                const statusCode = error.response.status; // code 400
+                const statusText = error.response.statusText; // Bad Request
+                const headers = error.response.headers;
+                console.log(`게시글 요청 전송 오류: ${Data} - ${statusCode} - ${statusText} - ${headers}`);
+        
+            } else if (error.request) {
+                // 요청이 전송되었지만, 응답이 수신되지 않았습니다. 
+                // 'error.request'는 브라우저에선 XMLHtpRequest 인스턴스,
+                // node.js에서는 http.ClientRequest 인스턴스로 log에 나타납니다.
+                console.log('게시글 응답 수신 오류:', error.request);
+        
+            } else {
+                // 오류가 발생한 요청을 설정하는 동안 문제가 발생했습니다.
+                console.log('오류 요청 설정 중 문제발생:', error.message);
+            }
+        
+            console.log('config 파일 오류:', error.config);
+            alert('서버와의 연결에 에러가 발생했습니다!');
+        };
     }
 
     useEffect(() => {
-        getPostList();
-        setDisplayedPosts(postList.slice((page - 1) * itemsPerPage, page * itemsPerPage)); // 페이지 변경 시 갱신
-    }, [postList, page]);
+        getPostList(); // 처음 랜더링 때 getPostLIst 호출해 데이터 가져옴
+    }, []);
+    
+    useEffect(() => {
+        if (Array.isArray(postList)) {
+            setDisplayedPosts(postList.slice((page - 1) * itemsPerPage, page * itemsPerPage)); // 페이지 변경 시 갱신
+        } else {
+            setDisplayedPosts([]);
+        }
+    }, [postList, page]); // postList, page 변경될 때마다 displayPosts 업데이트
+
 
     // 글쓰기 모달 관리
     const [showModal, setShowModal] = useState(false);
-
     const handleOpenModal = () => setShowModal(true);
-
     const handleCloseModal = () => setShowModal(false);
+
+    // 게시글 보기 모달 관리
+    const [showPostModal, setShowPostModal] = useState(false)
+    const handleOpenPostModal = () => setShowPostModal(true);
+    const handleClosePostModal = () => setShowPostModal(false);
+
 
     return (
         <div className="App">
@@ -64,6 +101,7 @@ function Board() {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
+
             <Container>
                 <div className='communityTitle'>커뮤니티</div>
             </Container>
@@ -73,17 +111,19 @@ function Board() {
                         <thead>
                             <tr>
                                 <th>번호</th>
-                                <th style={{ width: '65%' }}>제목</th>
+                                <th>태그</th>
+                                <th style={{ width: '60%' }}>제목</th>
                                 <th>작성자</th>
                                 <th>작성일</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {displayedPosts.length > 0 ? (
+                            {displayedPosts && displayedPosts.length > 0 ? (
                                 displayedPosts.map(post => (
                                     <tr key={post.id}>
                                         <td>{post.id.toString().padStart(4, '0')}</td>
-                                        <td><Link to={`/Community/post${post.id}`}>{post.title}</Link></td>
+                                        <td>{post.tag}</td>
+                                        <td onClick={handleOpenPostModal}>{post.title}</td>
                                         <td>{post.id}</td>
                                         <td>{post.editDate}</td>
                                     </tr>
@@ -109,7 +149,8 @@ function Board() {
                     />
                 </div>
             </Container>
-            <Modal 
+
+            <Modal  // 게시글 입력 모달
                     show={showModal} 
                     onHide={handleCloseModal} 
                     size="lg" // Bootstrap 사이즈 옵션 사용
@@ -120,6 +161,20 @@ function Board() {
                 </Modal.Header>
                 <Modal.Body>
                     <WritePostModal handleCloseModal={handleCloseModal} />
+                </Modal.Body>
+            </Modal>
+
+            <Modal // 게시글 보기 모달
+                    show={showPostModal} 
+                    onHide={handleClosePostModal} 
+                    size="lg" // Bootstrap 사이즈 옵션 사용
+                    className="custom-modal" // 커스텀 CSS 클래스 추가
+                >
+                <Modal.Header closeButton>
+                    <Modal.Title>게시글</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ViewPostModal handleCloseModal={handleClosePostModal} />
                 </Modal.Body>
             </Modal>
         </div>

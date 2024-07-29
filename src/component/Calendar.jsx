@@ -1,6 +1,6 @@
 import './CalendarStyle.css'; // 캘린더 스타일 설정
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from "@fullcalendar/interaction"; // 날짜칸 클릭 기능
@@ -10,13 +10,14 @@ import Swal from 'sweetalert2'
 import "bootstrap/dist/css/bootstrap.min.css"; // 부트스트랩 기능
 import { Navbar, Nav, Container } from 'react-bootstrap'; // 모달 팝업 및 네비게이션 바 기능
 import AccountModal from './AccountModal';
+import AccountList from './AccountList';
 
 
 function MyCalendar() {
-    const [modalOpen, setModalOpen] = useState(false); // 모달 state 변수
+    const [modalState, setModalState] = useState({ isOpen: false, type: null }); // 모달 상태 변수
     const [selectedDate, setSelectedDate] = useState(""); // 선택된 날짜 state 변수
     const [events, setEvents] = useState([ // 이벤트 state 변수
-        { money: '12300', title : '자린고비', date: '2024-07-15', textColor: 'red' },
+        { title: '12300', date: '2024-07-15', textColor: 'blue' },
         { title: '49000', date: '2024-07-25', textColor: 'red' },
         { title: '33300', date: '2024-07-11', textColor: 'red' },
     ]);
@@ -27,13 +28,13 @@ function MyCalendar() {
     const handleDateClick = (arg) => {
         setSelectedDate(arg.dateStr); // 날짜 설정
         setSelectedEvent({ title: "", money: "", memo: "" });
-        setModalOpen(true); // 모달창 열기
+        setModalState({ isOpen: true, type: 'AccountModal' }); // 모달창 열기
     };
 
     const handleCloseModal = () => {
-        setModalOpen(false); // 모달창 닫기
+        setModalState({ isOpen: false, type: null }); // 모달창 닫기
     };
-
+    
     const handleAppendEvent = (inputTitle, inputMoney, inputMemo) => {
         const selectedType = selectRef.current.value;
         const newEvent = {
@@ -66,15 +67,39 @@ function MyCalendar() {
         });
     };
 
-    function eventClick(info){
-        setSelectedEvent({
-            title: info.event.title,
-            money: info.event.money,
-            memo: info.event.extendedProps.memo || ""
-        });
-        setSelectedDate(info.event.startStr); // 선택된 날짜 업데이트
-        setModalOpen(true); // 모달창 열기
-    }
+    const eventClick = (info) => {
+        if (!info.event.title) {
+            setSelectedEvent({
+                title: info.event.title,
+                money: info.event.money,
+                memo: info.event.extendedProps.memo || ""
+            });
+            setSelectedDate(info.event.startStr); // 선택된 날짜 업데이트
+            setModalState({ isOpen: true, type: 'AccountModal' }); // 모달창 열기
+        } else {
+            setModalState({ isOpen: true, type: 'AccountList' }); // 모달창 열기
+            setSelectedDate(info.event.startStr); // 선택된 날짜 업데이트
+        }
+    };
+
+    // const groupEventsByMonth = (events) => {
+    //     return events.reduce((acc, event) => {
+    //         const month = event.date.slice(0, 7); // YYYY-MM 형식으로 추출
+    //         if (!acc[month]) {
+    //             acc[month] = { income: 0, expense: 0 };
+    //         }
+    //         const money = parseFloat(event.money) || 0;
+    //         if (event.textColor === 'blue') {
+    //             acc[month].income += money;
+    //         } else {
+    //             acc[month].expense += money;
+    //         }
+    //         return acc;
+    //     }, {});
+    // };
+
+    // const groupedEvents = groupEventsByMonth(events);
+    // console.log(groupedEvents); // 월별 수입과 지출 데이터를 확인하는 용도
 
     return (
         <div className="App">
@@ -83,8 +108,7 @@ function MyCalendar() {
                     <Navbar.Brand className='Navlogo' href="/">PennyWise</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                        </Nav>
+                        <Nav className="me-auto"></Nav>
                         <Nav className="ml-auto">
                             <Nav.Link href="/Main"><img src='img/con0.png' alt="Link Icon" /></Nav.Link>
                             <Nav.Link href="#about"><img src='img/con3.png' alt='Link Icon' /></Nav.Link>
@@ -111,18 +135,29 @@ function MyCalendar() {
                 />
             </Container>
 
-            <AccountModal
-                isOpen={modalOpen}
-                onClose={handleCloseModal}
-                onAppendEvent={handleAppendEvent}
-                selectedDate={selectedDate}
-                titleRef={selectedEvent.title}
-                moneyRef={selectedEvent.money}
-                memoRef={selectedEvent.memo}
-                selectRef={selectRef}
-                selectedEvent={selectedEvent} // 추가
-            />
+            {modalState.type === 'AccountModal' && (
+                <AccountModal
+                    isOpen={modalState.isOpen}
+                    onClose={handleCloseModal}
+                    onAppendEvent={handleAppendEvent}
+                    selectedDate={selectedDate}
+                    titleRef={selectedEvent.title}
+                    moneyRef={selectedEvent.money}
+                    memoRef={selectedEvent.memo}
+                    selectRef={selectRef}
+                    selectedEvent={selectedEvent} // 추가
+                />
+            )}
 
+            {modalState.type === 'AccountList' && (
+                <AccountList
+                    isOpen={modalState.isOpen}
+                    onClose={handleCloseModal}
+                    selectedDate={selectedDate}
+                    titleRef={selectedEvent.title}
+                    moneyRef={selectedEvent.money}
+                />
+            )}
         </div>
     );
 }

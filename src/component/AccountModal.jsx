@@ -12,17 +12,18 @@ const AccountModal = ({
     moneyRef,
     memoRef,
 }) => {
-    
+
     const selectRef = useRef();
 
     const [selectedType, setSelectedType] = useState('수입');
+    const [selectedCategory, setSelectedCategory] = useState('');
     const [inputTitle, setInputTitle] = useState('');
     const [inputMoney, setInputMoney] = useState('');
     const [inputMemo, setInputMemo] = useState('');
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태 state 변수
     const [receiptData, setReceiptData] = useState("");
     const [selectedEvent, setSelectedEvent] = useState({ title: "", money: "", memo: "" });
-    
+
 
     const [options, setOptions] = useState([
         { value: '배당금', label: '배당금' },
@@ -54,9 +55,9 @@ const AccountModal = ({
     useEffect(() => {
         if (isOpen) {
             // 모달이 열릴 때만 상태를 업데이트
-            setInputTitle( titleRef|| '' );
-            setInputMoney( moneyRef || '' );
-            setInputMemo( memoRef || '' );
+            setInputTitle(titleRef || '');
+            setInputMoney(moneyRef || '');
+            setInputMemo(memoRef || '');
         }
     }, [isOpen, titleRef, moneyRef, memoRef]);
 
@@ -152,8 +153,58 @@ const AccountModal = ({
                 memo: formatReceiptData()
             });
         }
-        
+
     }, [receiptData]);
+
+    const handleSave = async () => {
+        const firstCategory = selectedType === '수입' ? 1 : 2; // 예시: 수입이면 1, 지출이면 2
+        const secondCategory =
+          options.findIndex((option) => option.value === selectedCategory) + 1;
+    
+        const data = {
+          first: firstCategory,
+          second: secondCategory,
+          amount: parseInt(inputMoney, 10),
+          description: inputMemo,
+        };
+    
+        try {
+          const response = await fetch('http://localhost:8000/account', {
+            method: 'POST', // POST 메서드로 요청
+            headers: {
+              'Content-Type': 'application/json', // JSON 형식의 데이터 전송
+              Authorization: `Bearer sds`, // 여기에 실제 인증 토큰을 삽입
+            },
+            body: JSON.stringify(data), // 데이터를 JSON 문자열로 변환하여 전송
+          });
+    
+          if (!response.ok) {
+            throw new Error('Failed to save account');
+          }
+    
+          const result = await response.json();
+          console.log('Account created:', result);
+          Swal.fire({
+            icon: 'success',
+            title: '저장 성공!',
+            text: '가계부 항목이 성공적으로 저장되었습니다.',
+          });
+    
+          // 저장된 데이터를 부모 컴포넌트에 전달
+          onAppendEvent(inputTitle, inputMoney, inputMemo, selectedType);
+    
+          // 모달 닫기
+          onClose();
+        } catch (error) {
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: '저장 실패',
+            text: '가계부 항목 저장 중 오류가 발생했습니다.',
+          });
+        }
+      };
+
 
     return (
         <Modal
@@ -169,7 +220,8 @@ const AccountModal = ({
                         <option value="수입">수입</option>
                         <option value="지출">지출</option>
                     </select>
-                    <select>
+                    {/* <select> */}
+                    <select onChange={(e) => setSelectedCategory(e.target.value)}>
                         {options.map((option) => (
                             <option key={option.value} value={option.value}>
                                 {option.label}
@@ -215,7 +267,8 @@ const AccountModal = ({
                 <button onClick={onClose}> {/* 버튼 클릭 시 모달 창 닫기 */}
                     취소
                 </button>
-                <button onClick={() => onAppendEvent(inputTitle, inputMoney, inputMemo, selectedType)}>
+                {/* <button onClick={() => onAppendEvent(inputTitle, inputMoney, inputMemo, selectedType)}> */}
+                <button onClick={handleSave}>
                     저장
                 </button>
             </Modal.Footer>

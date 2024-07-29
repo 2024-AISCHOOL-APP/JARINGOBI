@@ -1,16 +1,31 @@
 import './BoardStyle.css'; // 커뮤니티 스타일 설정
 
-import axios from 'axios';
+import axios from 'axios' 
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table'; // 게시판 목록 기능
-import { Link } from "react-router-dom"; // 게시글 입력/보기 이동
+import { Link, useNavigate } from "react-router-dom"; // 게시글 입력/보기 이동
 import Pagination from 'react-js-pagination'; // 페이징 버튼 기능
 import "bootstrap/dist/css/bootstrap.min.css"; // 부트스트랩 기능
-import { Navbar, Nav, Container, Modal } from 'react-bootstrap'; // 모달 팝업 및 네비게이션 바 기능
-import WritePostModal from './WritePostModal'; // WritePost 모달 컴포넌트 import
+import { Navbar, Nav, Container } from 'react-bootstrap'; // 모달 팝업 및 네비게이션 바 기능
 
 function Board() {
+
+    // const initialPosts = [ // 임시 게시글 목록
+    //     { id: 10, title: '게시글10', author: 'man', date: '24.07.18' },
+    //     { id: 9, title: '게시글9', author: 'man', date: '24.07.17' },
+    //     { id: 8, title: '게시글8', author: 'man', date: '24.07.16' },
+    //     { id: 7, title: '게시글7', author: 'man', date: '24.07.15' },
+    //     { id: 6, title: '게시글6', author: 'man', date: '24.07.14' },
+    //     { id: 5, title: '게시글5', author: 'man', date: '24.07.13' },
+    //     { id: 4, title: '게시글4', author: 'man', date: '24.07.12' },
+    //     { id: 3, title: '게시글3', author: 'man', date: '24.07.11' },
+    //     { id: 2, title: '게시글2', author: 'man', date: '24.07.10' },
+    //     { id: 1, title: '게시글1', author: 'man', date: '24.07.03' }
+    // ];
+
+    // const [posts, setPosts] = useState(initialPosts); // 임시 게시글 할당
+
     const [postList, setPostList] = useState([]); // 서버에서 받아올 게시글 데이터
     const [displayedPosts, setDisplayedPosts] = useState([]); // 게시판 목록에 보여줄 게시글
 
@@ -20,6 +35,10 @@ function Board() {
     const paging = (pageNumber) => {  // 페이지 이동
         setPage(pageNumber);
     };
+
+    // const handleDelete = (id) => { // 게시글 삭제
+    //     setPosts(posts.filter(post => post.id !== id));
+    // };
 
     // 서버에서 게시글 데이터 받아와 표시
     const getPostList = async () => { // 게시글 데이터 할당
@@ -33,18 +52,16 @@ function Board() {
             // alert('서버와의 연결에 에러가 발생했습니다!')
         }
     }
-
     useEffect(() => {
         getPostList();
         setDisplayedPosts(postList.slice((page - 1) * itemsPerPage, page * itemsPerPage)); // 페이지 변경 시 갱신
-    }, [postList, page]);
+    }, [postList, page]); // 서버 연결 시 initialPosts 대신에 postList 작성
 
-    // 글쓰기 모달 관리
-    const [showModal, setShowModal] = useState(false);
-
-    const handleOpenModal = () => setShowModal(true);
-
-    const handleCloseModal = () => setShowModal(false);
+    // 글쓰기 버튼 클릭 시 글쓰기 WrirtePost 페이지로 이동
+    const Navigate = useNavigate()
+    const handleClick = () => {
+        Navigate('/WritePost');
+    }
 
     return (
         <div className="App">
@@ -95,7 +112,7 @@ function Board() {
                             )}
                         </tbody>
                     </Table>
-                    <Button className='writeButton' onClick={handleOpenModal}>글쓰기</Button>
+                    <Button className='writeButton' onClick={handleClick}>글쓰기</Button>
                 </div>
                 <div className="d-flex justify-content-center">
                     <Pagination
@@ -109,19 +126,6 @@ function Board() {
                     />
                 </div>
             </Container>
-            <Modal 
-                    show={showModal} 
-                    onHide={handleCloseModal} 
-                    size="lg" // Bootstrap 사이즈 옵션 사용
-                    className="custom-modal" // 커스텀 CSS 클래스 추가
-                >
-                <Modal.Header closeButton>
-                    <Modal.Title>글쓰기</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <WritePostModal handleCloseModal={handleCloseModal} />
-                </Modal.Body>
-            </Modal>
         </div>
     );
 }

@@ -7,19 +7,6 @@
   /*color*/
   --Cb: linear-gradient(180deg, #e1bee7 0%, #f8bbd0 50%, #ffffff 100%);
 }
-/* Navbar */
-.Navbar {
-  opacity: 0.5;
-  width: auto;
-  position: relative;
-}
-.Container {
-  background: var(--Cb);
-}
-.Navlogo {
-  font-family: var(--f);
-  color: black;
-}
 
 .Logincontainer {
   display: flex;

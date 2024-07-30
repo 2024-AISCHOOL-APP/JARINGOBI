@@ -17,20 +17,4 @@
 body {
   font-family: var(--f);
 }
-/* Navbar */
-.Navbar {
-  opacity: 0.5;
-  width: 100%;
-  position: relative;
-}
 
-.Container {
-  background: var(--Cb);
-}
-
-.Navlogo {
-  color: var(--b);
-}
-
-.form-container {
-}

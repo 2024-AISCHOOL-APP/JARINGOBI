@@ -1,0 +1,24 @@
+.Navbar {
+  opacity: 0.5;
+  width: auto;
+  position: relative;
+  background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+  /* 기본적인 스타일 설정 */
+}
+
+.Container {
+  display: flex;
+  justify-content: space-between; /* 왼쪽과 오른쪽 아이템을 분리 */
+  align-items: center; /* 수직 가운데 정렬 */
+}
+
+.Navlogo {
+  font-family: var(--f);
+  color: black;
+  padding-bottom: 10px;
+}
+
+.Navbar .navbar-collapse {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+}

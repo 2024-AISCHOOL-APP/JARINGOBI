@@ -20,7 +20,7 @@ const AccountModal = ({
     const [inputMoney, setInputMoney] = useState('');
     const [inputMemo, setInputMemo] = useState('');
     const [isLoading, setIsLoading] = useState(false); // 로딩 상태 state 변수
-    const [receiptData, setReceiptData] = useState("");
+    const [receiptData, setReceiptData] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState({ title: "", money: "", memo: "" });
 
     const [options, setOptions] = useState([
@@ -33,23 +33,21 @@ const AccountModal = ({
     const handleSelectChange = () => {
         const selectedType = selectRef.current.value;
         setSelectedType(selectedType);
-        if (selectedType === '수입') {
-            setOptions([
+        setOptions(selectedType === '수입'
+            ? [
                 { value: '배당금', label: '배당금' },
                 { value: '예금', label: '예금' },
                 { value: '기타수입', label: '기타수입' },
                 { value: '고정수입', label: '고정수입' },
-            ]);
-        } else if (selectedType === '지출') {
-            setOptions([
+            ]
+            : [
                 { value: '식비', label: '식비' },
                 { value: '교통비', label: '교통비' },
                 { value: '의류비', label: '의류비' },
                 { value: '고정지출', label: '고정지출' },
-            ]);
-        }
+            ]
+        );
     };
-
     useEffect(() => {
         if (isOpen) {
             // 모달이 열릴 때만 상태를 업데이트
@@ -91,21 +89,17 @@ const AccountModal = ({
 
                         setIsLoading(true); // 파일 업로드 중 로딩 상태 설정
 
-                        fetch("http://localhost:8000/receive_receipt", {
+                        fetch("http://localhost:5000/receive_receipt", {
                             method: "POST",
                             body: formData,
                         })
                             .then((response) => response.json())
                             .then((data) => {
-                                setIsLoading(false); // 파일 업로드 완료 후 로딩 상태 해제
-
-                                // 여기서 final_receipt_data 변수에 데이터를 담을 수 있음
-                                const final_receipt_data = data;
-                                console.log(final_receipt_data);
+                                setIsLoading(false);
                                 setReceiptData(data);
                             })
                             .catch((error) => {
-                                setIsLoading(false); // 파일 업로드 실패 시 로딩 상태 해제
+                                setIsLoading(false);
                                 console.error("Error:", error);
                                 Swal.fire({
                                     icon: "error",
@@ -123,33 +117,69 @@ const AccountModal = ({
     const formatReceiptData = () => {
         if (!receiptData) return "";
 
-        const formattedItems = receiptData.items.map(item => (
-            `${item.itemName.padEnd(20)} ${item.itemCount.padEnd(10)} ${item.itemUnitPrice.padEnd(10)} ${item.itemTotalPrice}`
-        )).join('\n');
+        const itemNameWidth = 20;
+        const itemCountWidth = 10;
+        const itemUnitPriceWidth = 10;
+        const itemTotalPriceWidth = 10;
 
-        // 전체 포맷
-        const formattedText = `매장 이름 : ${receiptData.storeName}\n
-매장 주소 : ${receiptData.storeAddress}\n
-매장 전화번호 : ${receiptData.storeTel}\n
-항목                         수량             단가             금액\n${formattedItems}\n
-총 결제 금액    ${receiptData.totalPrice}`;
+        const hasItems = 'items' in receiptData && Array.isArray(receiptData.items) && receiptData.items.length > 0;
+
+        const formattedItems = hasItems
+            ? receiptData.items.map(item => {
+                const itemName = item.product_name || '';
+                const itemCount = item.count || '';
+                const itemUnitPrice = item.unit_price || '';
+                const itemTotalPrice = item.total_price || '';
+
+                return (
+                    `${itemName.padEnd(itemNameWidth)}\t`
+                    + `${itemCount.padEnd(itemCountWidth)}\t`
+                    + `${itemUnitPrice.padEnd(itemUnitPriceWidth)}\t`
+                    + `${itemTotalPrice}`
+                );
+            }).join('\n')
+            : '';
+
+        const receiptEntries = [
+            { key: '매장 이름', value: receiptData.storeName },
+            { key: '매장 주소', value: receiptData.storeAddress?.[0] },
+            { key: '매장 전화번호', value: receiptData.storeTel?.[0] },
+            { key: '결제 날짜', value: receiptData.paymentDate },
+            { key: '결제 시간', value: receiptData.paymentTime }
+        ].filter(entry => entry.value);
+
+        const formattedEntries = receiptEntries
+            .map(entry => `${entry.key} : ${entry.value}`)
+            .join('\n');
+
+        const itemsHeader = hasItems
+            ? `항목${' '.repeat(itemNameWidth - 3)}\t수량${' '.repeat(itemCountWidth - 2)}\t단가${' '.repeat(itemUnitPriceWidth - 2)}\t금액`
+            : '';
+
+        const totalPriceLine = receiptData.totalPrice
+            ? `총 결제 금액 : ${receiptData.totalPrice}`
+            : '';
+
+        const formattedText = formattedEntries
+            ? `${formattedEntries}\n\n${itemsHeader}\n${formattedItems}\n\n${totalPriceLine}`
+            : `${itemsHeader}\n${formattedItems}\n\n${totalPriceLine}`;
 
         return formattedText;
     };
 
     useEffect(() => {
         if (receiptData) {
-            setInputMoney(receiptData.totalPrice);
-            setInputTitle(receiptData.storeName);
+            const cleanedTotalPrice = receiptData.totalPrice.replace(/,/g, ''); // 쉼표 제거
+            setInputMoney(cleanedTotalPrice);
+            setInputTitle(receiptData.storeName || '');
             setInputMemo(formatReceiptData());
 
             setSelectedEvent({
-                title: receiptData.storeName,
-                money: receiptData.totalPrice,
+                title: receiptData.storeName || '',
+                money: cleanedTotalPrice,
                 memo: formatReceiptData()
             });
         }
-
     }, [receiptData]);
 
     const handleSave = async () => {

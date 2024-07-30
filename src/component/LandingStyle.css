@@ -17,22 +17,6 @@
 body{
     font-family: var(--f);
 }
-/* Navbar */
-.Navbar {
-    opacity: 0.5;
-    width: 100%;
-    position: relative;
-}
-
-.Container {
-    background: var(--Cb)
-}
-
-.Navlogo {
-    color: var(--b)
-}
-
-
 
 .landing-page {
     width: 100%;
@@ -41,21 +25,6 @@ body{
     flex-direction: column;
     align-items: center;
     background: white;
-  }
-  
-  .Navbar {
-    width: 100%;
-    background-color: #f8f9fa;
-  }
-  
-  .Container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .Navlogo {
-    font-size: 24px;
   }
   
   .grid-container {

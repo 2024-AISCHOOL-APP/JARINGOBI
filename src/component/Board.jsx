@@ -85,23 +85,6 @@ function Board() {
 
     return (
         <div className="App">
-            <Navbar className='Navbar'>
-                <Container className='Container'>
-                    <Navbar.Brand className='Navlogo' href="/">PennyWise</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                        </Nav>
-                        <Nav className="ml-auto">
-                            <Nav.Link href="/Main"><img src='img/con0.png' alt="Link Icon" /></Nav.Link>
-                            <Nav.Link href="#about"><img src='img/con3.png' alt='Link Icon' /></Nav.Link>
-                            <Nav.Link href="/Community"><img src='img/con1.png' alt='Link Icon' /></Nav.Link>
-                            <Nav.Link href="#about"><img src='img/con2.png' alt='Link Icon' /></Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-
             <Container>
                 <div className='communityTitle'>커뮤니티</div>
             </Container>

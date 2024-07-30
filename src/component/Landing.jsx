@@ -1,38 +1,13 @@
 import React from 'react';
 import './LandingStyle.css';
 import { Button } from 'react-bootstrap';
-import { Navbar, Nav, Container } from 'react-bootstrap'; // 모달 팝업 및 네비게이션 바 기능
 import Carousel from 'react-bootstrap/Carousel';
 // import "./App.css";
 
 const Landing = () => {
   return (
     <div className='landing-page'>
-      <Navbar className='Navbar'>
-        <Container className='Container'>
-          <Navbar.Brand className='Navlogo' href='/'>
-            PennyWise
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls='basic-navbar-nav' />
-          <Navbar.Collapse id='basic-navbar-nav'>
-            <Nav className='me-auto'></Nav>
-            <Nav className='ml-auto'>
-              <Nav.Link href='/Main'>
-                <img src='img/con0.png' alt='Link Icon' />
-              </Nav.Link>
-              <Nav.Link href='#about'>
-                <img src='img/con3.png' alt='Link Icon' />
-              </Nav.Link>
-              <Nav.Link href='/Community'>
-                <img src='img/con1.png' alt='Link Icon' />
-              </Nav.Link>
-              <Nav.Link href='#about'>
-                <img src='img/con2.png' alt='Link Icon' />
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      
       <div className='grid-container'>
         <div className='grid-item logo-section'>
           <img className='logo-image' src='img/pennywise.png' alt='logo' />
@@ -55,7 +30,7 @@ const Landing = () => {
           강력한 분석 능력을 통한 통계분석
         </div>
         <div className='grid-item'>
-          <Button href='/auth' className='purple-button'>
+          <Button href='/Login' className='purple-button'>
             로그인하고 이용하기
           </Button>
         </div>

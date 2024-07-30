@@ -5,21 +5,6 @@
     /* font*/
     --f: 'Roboto'
 }
-/* Navbar */
-.Navbar {
-    opacity: 0.5;
-    width: auto;
-    position:relative;
-}
-.Container{
-    background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
-}
-.Navlogo{
-    font-family: var(--f);
-    color: black;
-}
-
-
 
 
 a{

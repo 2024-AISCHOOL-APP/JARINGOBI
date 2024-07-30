@@ -30,31 +30,7 @@ const Login = () => {
 
   return (
     <div>
-      <Navbar className='Navbar'>
-        <Container className='Container'>
-          <Navbar.Brand className='Navlogo' href='/'>
-            PennyWise
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls='basic-navbar-nav' />
-          <Navbar.Collapse id='basic-navbar-nav'>
-            <Nav className='me-auto'></Nav>
-            <Nav className='ml-auto'>
-              <Nav.Link href='/Main'>
-                <img src='img/con0.png' alt='Link Icon' />
-              </Nav.Link>
-              <Nav.Link href='#about'>
-                <img src='img/con3.png' alt='Link Icon' />
-              </Nav.Link>
-              <Nav.Link href='/Community'>
-                <img src='img/con1.png' alt='Link Icon' />
-              </Nav.Link>
-              <Nav.Link href='#about'>
-                <img src='img/con2.png' alt='Link Icon' />
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      
       <div className='Logincontainer'>
         <div className='left-section'>
           <img className='pennybody' src='img/pennybody.jpg' alt='Pennywise' />

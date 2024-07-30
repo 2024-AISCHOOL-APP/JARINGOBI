@@ -8,18 +8,16 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS
 import { Card, Form } from 'react-bootstrap'; // 부트스트랩 컴포넌트
 import Swal from 'sweetalert2'; // SweetAlert2로 더 나은 알림 제공
 
-import EditPostModal from './EditPostModal'; // EditPostModal 게시글 수정 컴포넌트 import
 
-function ViewPostModal({ postId, handleCloseModal }) { 
+function ViewPostModal({ postId, handleCloseModal, handelOpenEditModal }) { 
 
     const [post, setPost] = useState([]); // 서버로부터 게시글 정보 받기
-    const [showEditModal, setShowEditModal] = useState(false); // 수정 모달 
 
     // 서버로부터 게시글 받아오기
     useEffect(() => {
         const getPost = async () => {
             try {
-                console.log('특정 게시판 보기 요청');
+                console.log('특정 게시판 보기 요청:', postId);
 
                 const response1 = await axios.get(`http://localhost:8000/community/${postId}`); // API 엔드포인트 확인
 
@@ -39,7 +37,7 @@ function ViewPostModal({ postId, handleCloseModal }) {
   const deletePost = async () => {
 
     // 게시글을 쓴 사용자 본인이 아닐 경우 경고
-    if (post.userId !== null) {
+    if (post.id !== postId) {
       Swal.fire({
         icon: 'warning',
         title: '경고',
@@ -61,10 +59,10 @@ function ViewPostModal({ postId, handleCloseModal }) {
   };
 
   // 게시글을 수정하는 함수
-  const reWritePost = () => {
+  const editPost = () => {
 
     // 게시글을 쓴 사용자 본인이 아닐 경우 경고
-    if (post.userId !== null) {
+    if (post.id !== postId) {
         Swal.fire({
           icon: 'warning',
           title: '경고',
@@ -75,8 +73,12 @@ function ViewPostModal({ postId, handleCloseModal }) {
 
 
     // 수정 버튼 클릭 시 수정 모달 창 열림
-      handleCloseModal()
-      setShowEditModal(postId);
+      handleCloseModal();
+      if (postId === 'true' || postId === null) {
+        console.log('postId가 올바르지 않습니다.');
+      } else {
+        handelOpenEditModal(postId);
+      }
   };
 
 
@@ -106,7 +108,7 @@ function ViewPostModal({ postId, handleCloseModal }) {
                 </Button>&ensp;
 
                 <Button
-                  onClick={reWritePost}
+                  onClick={editPost}
                   className="reWriteButton"
                   variant="primary"
                 >
@@ -117,12 +119,6 @@ function ViewPostModal({ postId, handleCloseModal }) {
           )}
         </Form>
       </Card>
-      {showEditModal && post && ( // 게시글 수정 모달 열기
-          <EditPostModal
-            handleCloseModal={() => setShowEditModal(true)}
-            postid={postId}
-          />
-      )}
     </div>
 
   );

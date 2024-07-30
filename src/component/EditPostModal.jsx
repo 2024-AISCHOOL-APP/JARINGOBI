@@ -2,7 +2,7 @@
 import './WritePostStyle.css'; // 커스텀 스타일
 
 import axios from 'axios';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS
 import { Card, Form, Spinner } from 'react-bootstrap'; // 부트스트랩 컴포넌트
@@ -10,6 +10,12 @@ import Swal from 'sweetalert2'; // SweetAlert2로 더 나은 알림 제공
 
 
 function EditPostModal({ postId, handleCloseModal }) {
+
+  // const [post, setPost] = useState({
+  //   title : '',
+  //   text: ''
+  // }); 
+
   const [topic, setTopic] = useState(''); // 수정할 제목 상태
   const [section, setSection] = useState(''); // 수정할 본문 상태
   const [inputSubject, setInputSubject] = useState(''); // 태그 분류 결과 상태
@@ -19,6 +25,25 @@ function EditPostModal({ postId, handleCloseModal }) {
 
   const titleRef = useRef(); // 제목 입력 참조
   const contentRef = useRef(); // 본문 입력 참조
+
+  // 서버로부터 게시글 받아오기
+  useEffect(() => {
+    const getPost = async () => {
+        try {
+            console.log('특정 게시글 보기 요청:', postId);
+            const response = await axios.get(`http://localhost:8000/community/${postId}`); // API 엔드포인트 확인
+
+            console.log('특정 게시글 응답 수신:', response.data);
+            setTopic(response.data.title); // 제목 상태 저장
+            setSection(response.data.text); // 본문 상태 저장
+
+        } catch (error) {
+            console.error('게시글 세부내용 요청 오류:', error);
+            alert('게시글 세부 내용을 불러오는 과정에서 오류가 발생하였습니다.');
+        }
+    };
+        getPost();
+  }, [postId]);
 
   const handleClear = () => {
     if (titleRef.current) titleRef.current.value = ''; // 제목 초기화
@@ -141,6 +166,7 @@ function EditPostModal({ postId, handleCloseModal }) {
               type="text"
               ref={titleRef}
               placeholder="제목 입력"
+              value={topic}
               onChange={(e) => setTopic(e.target.value)}
               className="titleInput"
             />
@@ -185,6 +211,7 @@ function EditPostModal({ postId, handleCloseModal }) {
               rows={10}
               ref={contentRef}
               placeholder="본문 입력"
+              value={section}
               onChange={handleContentChange}
               className="contentInput"
             />

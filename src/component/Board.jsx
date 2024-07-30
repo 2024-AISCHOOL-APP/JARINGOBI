@@ -22,6 +22,10 @@ function Board() {
     const [page, setPage] = useState(1); // 현재 페이지
     const itemsPerPage = 8; // 한 페이지 당 8개 게시글 표시 제한
 
+    const [showModal, setShowModal] = useState(false); // 글쓰기 모달 상태
+    const [postIdForView, setPostIdForView] = useState(null); // 게시글 보기 모달 상태 및 ID
+    const [postIdForEdit, setPostIdForEdit] = useState(null); // 게시글 수정 모달 상태 및 ID
+
     const paging = (pageNumber) => {  // 페이지 이동
         setPage(pageNumber);
     };
@@ -79,14 +83,22 @@ function Board() {
     }, [postList, page]); // postList, page 변경될 때마다 displayPosts 업데이트
 
 
-    // 글쓰기 모달 관리
-    const [showModal, setShowModal] = useState(false);
-    const handleOpenModal = () => setShowModal(true);
-    const handleCloseModal = () => setShowModal(false);
+    // 글쓰기, 글보기, 글수정 모달 관리
+    const handleOpenWriteModal = () => setShowModal(true);
+    const handleCloseWriteModal = () => setShowModal(false);
 
-    // 게시글 보기 모달 관리
-    const [showPostModal, setShowPostModal] = useState(false); // 게시물 ID 저장
-    const handleClosePostModal = () => setShowPostModal(false);
+    const handleOpenViewModal = (postId) => {
+        setPostIdForView(postId);
+        setPostIdForEdit(null); // 글수정 모달 상태 초기화
+    };
+
+    const handleCloseViewModal = () => setPostIdForView(null);
+
+    const handleOpenEditModal = (postId) => {
+        setPostIdForEdit(postId);
+        setPostIdForView(null); // 글보기 모달 상태 초기화
+    };
+    const handleCloseEditModal = () => setPostIdForEdit(null);
 
 
     return (
@@ -108,7 +120,7 @@ function Board() {
                             <tr key={post.id}>
                                 <td>{post.id.toString().padStart(4, '0')}</td>
                                 <td>{post.tag}</td>
-                                <td onClick={() => setShowPostModal(post.id)}>{post.title}</td>
+                                <td onClick={() =>  handleOpenViewModal(post.id)}>{post.title}</td>
                                 <td>{post.nickname}</td>
                                 <td>{post.createdAt}</td>
                             </tr>
@@ -121,7 +133,7 @@ function Board() {
                 </tbody>
             </Table>
             <div className="bottomSection">
-                <Button className='writeButton' onClick={handleOpenModal}>글쓰기</Button>
+                <Button className='writeButton' onClick={handleOpenWriteModal}>글쓰기</Button>
                 <div className="paginationContainer">
                     <Pagination
                         activePage={page}
@@ -137,7 +149,7 @@ function Board() {
 
             <Modal  // 게시글 입력 모달
                     show={showModal} 
-                    onHide={handleCloseModal}
+                    onHide={handleCloseWriteModal}
                     size="lg" // Bootstrap 사이즈 옵션 사용
                     className="custom-modal" // 커스텀 CSS 클래스 추가
                 >
@@ -145,13 +157,13 @@ function Board() {
                     <Modal.Title>글쓰기</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <WritePostModal handleCloseModal={handleCloseModal} />
+                    <WritePostModal handleCloseModal={handleCloseWriteModal} />
                 </Modal.Body>
             </Modal>
 
-            {showPostModal && <Modal // 게시글 보기 모달
-                    show={showPostModal}
-                    onHide={handleClosePostModal} 
+            {postIdForView !== null && <Modal // 게시글 보기 모달
+                show={postIdForView !== null}
+                onHide={handleCloseViewModal}  
                     size="lg" // Bootstrap 사이즈 옵션 사용
                     className="custom-modal" // 커스텀 CSS 클래스 추가
                 >
@@ -159,15 +171,30 @@ function Board() {
                     <Modal.Title>게시글</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <ViewPostModal postId={showPostModal} handleCloseModal={handleClosePostModal} />
+                    <ViewPostModal 
+                        postId={postIdForView} 
+                        handleCloseModal={handleCloseViewModal}
+                        handelOpenEditModal={handleOpenEditModal} 
+                    />
                 </Modal.Body>
             </Modal>}
 
-            <Modal // 게시물 수정 모달
-
+            {postIdForEdit !== null && <Modal // 게시물 수정 모달
+                show={postIdForEdit !== null}
+                onHide={handleCloseEditModal} 
+                size="lg" // Bootstrap 사이즈 옵션 사용
+                className="custom-modal" // 커스텀 CSS 클래스 추가
             >
-
-            </Modal>
+                <Modal.Header closeButton>
+                    <Modal.Title>게시글 수정</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <EditPostModal 
+                        postId={postIdForEdit} 
+                        handleCloseModal={handleCloseEditModal} 
+                    />
+                </Modal.Body>
+            </Modal>}
         </div>
     );
 }

@@ -18,3 +18,70 @@ body {
   font-family: var(--f);
 }
 
+* {
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  color: inherit;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.container img {
+  height: 100%;
+  border-radius: 100%;
+}
+
+.auth-form {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border: 2px solid #efefefce;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 30px 0;
+}
+
+.auth-form h5 {
+  width: 60%;
+}
+
+.form-input {
+  margin-bottom: 20px;
+  width: 60%;
+  border: none;
+  background: #efefefa3;
+  padding: 10px;
+}
+
+.classification {
+  display: none;
+}
+
+.radio {
+  display: flex;
+  width: 60%;
+}
+
+.radio input {
+  margin-right: 10px;
+}
+.radio label {
+  margin-right: 30px;
+}
+
+.auth-btn {
+  border: none;
+  background: rgb(178, 78, 78);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 30px;
+}

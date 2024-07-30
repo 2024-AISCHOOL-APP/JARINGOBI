@@ -10,19 +10,17 @@ import Navi from './component/Navi';
 
 function App() {
   return (
-    <div>
+    <>
       <Navi></Navi>
-      <>
-        <Routes>
-          <Route path='/' element={<Response />} />
-          <Route path='/Main' element={<Calendar />} />
-          <Route path='/Login' element={<Login />} />
-          <Route path='/Community' element={<Board />} />
-          <Route path='/Signup' element={<Signup />} />
-          <Route path='/dashboard' element={<Dashboard />} />
-        </Routes>
-      </>
-    </div>
+      <Routes>
+        <Route path='/' element={<Response />} />
+        <Route path='/Main' element={<Calendar />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/Community' element={<Board />} />
+        <Route path='/Signup' element={<Signup />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+      </Routes>
+    </>
   );
 }
 

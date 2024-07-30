@@ -20,6 +20,7 @@ function WritePostModal({ handleCloseModal }) {
   // useRef를 사용하여 입력 및 텍스트 영역 요소에 접근
   const titleRef = useRef(); // 제목 입력 참조
   const contentRef = useRef(); // 본문 입력 참조
+  const tagRef = useRef(); // 태그 입력 참조
   
 
   // 모든 필드를 초기화하고 상태를 리셋하는 함수
@@ -68,11 +69,13 @@ function WritePostModal({ handleCloseModal }) {
       return;
     }
 
-    // 실제 저장 로직 구현
+    // 실제 저장 로직 구현, 임시 테스트용 tag 및 userId 할당
     try {
-          const response = await axios.post('http://localhost:8000', {
+          const response = await axios.post('http://localhost:8000/community', {
           title : titleRef.current.value,
-          text : contentRef.current.value
+          text : contentRef.current.value,
+          tag : 1, 
+          userId : 200
       });
           console.log('게시글이 저장 되었습니다:', response.data);
           handleCloseModal(); // 저장 후 모달 닫기
@@ -183,7 +186,7 @@ function WritePostModal({ handleCloseModal }) {
               )}
               {!loading && inputSubject && (
                 <div className="ms-3">
-                  <h5 className="me-2">{inputSubject}</h5> {/* 태그 결과 표시 */}
+                  <h5 className="me-2" ref={tagRef}>{inputSubject}</h5> {/* 태그 결과 표시 */}
                 </div>
               )}
             </div>

@@ -2,14 +2,14 @@
 import './WritePostStyle.css'; // 커스텀 스타일
 
 import axios from 'axios';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS
 import { Card, Form, Spinner } from 'react-bootstrap'; // 부트스트랩 컴포넌트
 import Swal from 'sweetalert2'; // SweetAlert2로 더 나은 알림 제공
 
 
-function EditPostModal({ handleCloseModal, postData }) {
+function EditPostModal({ postId, handleCloseModal }) {
   const [topic, setTopic] = useState(''); // 수정할 제목 상태
   const [section, setSection] = useState(''); // 수정할 본문 상태
   const [inputSubject, setInputSubject] = useState(''); // 태그 분류 결과 상태
@@ -19,13 +19,6 @@ function EditPostModal({ handleCloseModal, postData }) {
 
   const titleRef = useRef(); // 제목 입력 참조
   const contentRef = useRef(); // 본문 입력 참조
-
-  useEffect(() => {
-    if (postData) {
-      setTopic(postData.title || '');
-      setSection(postData.text || '');
-    }
-  }, [postData]);
 
   const handleClear = () => {
     if (titleRef.current) titleRef.current.value = ''; // 제목 초기화
@@ -37,6 +30,7 @@ function EditPostModal({ handleCloseModal, postData }) {
   };
 
   const savePost = async () => {
+    // 제목이 비어있을 경우 경고 메시지 출력
     if (topic.trim() === '') {
       Swal.fire({
         icon: 'warning',
@@ -46,6 +40,7 @@ function EditPostModal({ handleCloseModal, postData }) {
       return;
     }
 
+    // 본문이 비어있을 경우 경고 메시지 출력
     if (section.trim() === '') {
       Swal.fire({
         icon: 'warning',
@@ -55,6 +50,7 @@ function EditPostModal({ handleCloseModal, postData }) {
       return;
     }
 
+    // 태그가 완료되지 않았을 경우 알림
     if (!tagged) {
       Swal.fire({
         icon: 'warning',
@@ -64,10 +60,12 @@ function EditPostModal({ handleCloseModal, postData }) {
       return;
     }
 
-    try { // 서버로 수정한 게시글 전송해 갱신하기
-      await axios.put(`http://localhost:8000/${postData.id}`, {
-        title: topic,
-        text: section,
+    try { // 서버로 수정한 게시글 전송해 갱신하기, 임시 테스트용 tag 및 userId 할당 
+      await axios.put(`http://localhost:8000/community/${postId}`, {
+        title: titleRef.current.value,
+        text: contentRef.current.value,
+        tag : 2,
+        userId : 100
       });
 
       Swal.fire({
@@ -98,7 +96,7 @@ function EditPostModal({ handleCloseModal, postData }) {
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/receive_post', {
+      const response = await fetch('http://127.0.0.1:5000/receive_post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +141,6 @@ function EditPostModal({ handleCloseModal, postData }) {
               type="text"
               ref={titleRef}
               placeholder="제목 입력"
-              value={topic}
               onChange={(e) => setTopic(e.target.value)}
               className="titleInput"
             />
@@ -179,7 +176,7 @@ function EditPostModal({ handleCloseModal, postData }) {
               )}
               {!loading && inputSubject && (
                 <div className="ms-3">
-                  <h5 className="me-2">{inputSubject}</h5>
+                  <h5 className="me-2">{inputSubject}</h5> {/* 태그 결과 표시 */}
                 </div>
               )}
             </div>
@@ -188,7 +185,6 @@ function EditPostModal({ handleCloseModal, postData }) {
               rows={10}
               ref={contentRef}
               placeholder="본문 입력"
-              value={section}
               onChange={handleContentChange}
               className="contentInput"
             />

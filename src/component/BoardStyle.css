@@ -1,51 +1,80 @@
-:root{
-  /*margin*/
+:root {
+  /* margin */
   --m-left: 400px;
   --m-top: 150px;
-  /* font*/
-  --f: 'Roboto'
+  /* font */
+  --f: 'Roboto', sans-serif; /* fallback font 추가 */
 }
 
-.App { /* 전체 APP에 대한 영역 */
+/* 전체 APP에 대한 영역 */
+.BoardContainer {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* 전체 화면 높이 설정 */
-  margin: 0;
-  overflow: hidden; /* 화면 오버플로우 방지 */
+  height: calc(100vh - 48px); /* Navi의 높이를 고려하여 조정 */
+  padding-top: 10px; /* 상단 여백 */
+  padding-left: 100px; /* 가로 여백 */
+  padding-right: 100px;
+  box-sizing: border-box; /* 패딩을 전체 높이에 포함 */
 }
 
 /* 게시판 타이틀 설정 */
 .communityTitle {
-font-size: x-large;
-font-weight: bold;
+  font-size: x-large;
+  font-weight: bold;
+  margin-bottom: 20px; /* 타이블과 테이블 여백 설정 */
 }
 
-/* 테이블 화면 영역 설정*/
+/* 테이블 화면 영역 설정 */
 .table {
   text-align: center;
-  border-collapse: collapse;
-  margin-top: 30px;
+  width: 100%; /* 전체 너비 사용 */
+  margin-bottom: 0; /* 테이블 하단과 버튼의 간격 조정 */
 }
 
-.tbody {
-  background-color: white; /* 적용 안됨 */
+/* 하단 섹션 */
+.bottomSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 왼쪽 정렬 */
+  margin-top: 20px; /* 글쓰기 버튼과 페이지 네비게이션 사이의 간격 조정 */
 }
 
-/* 페이징 버튼 설정*/
+/* 글쓰기 버튼 설정 */
+.writeButton {
+  color: #E1BEE7;
+  background: white;
+  border-color: #E1BEE7;
+  margin-bottom: 20px; /* 페이지 네비게이션과의 간격 조정 */
+}
+
+.writeButton:hover {
+  color: white;
+  background-color: #E1BEE7;
+  border-color: #E1BEE7;
+}
+
+/* 페이징 버튼 컨테이너 */
+.paginationContainer {
+  display: flex;
+  justify-content: center; /* 가로축 중앙 정렬 */
+  width: 100%; /* 컨테이너가 전체 너비를 사용하도록 설정 */
+}
+
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: 15px;
+  margin: 0;
 }
 
 ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 ul.pagination li {
   display: inline-block;
-  width: 30px;
+  width: 30px; /* 버튼 크기 조정 */
   height: 30px;
   border: 1px solid #e2e2e2;
   display: flex;
@@ -54,12 +83,12 @@ ul.pagination li {
   font-size: 1rem;
 }
 
-ul.pagination li:first-child{
+ul.pagination li:first-child {
   background: white;
   border-radius: 5px 0 0 5px;
 }
 
-ul.pagination li:last-child{
+ul.pagination li:last-child {
   background: white;
   border-radius: 0 5px 5px 0;
 }
@@ -67,7 +96,6 @@ ul.pagination li:last-child{
 ul.pagination li a {
   text-decoration: none;
   color: #E1BEE7;
-  font-size: rem;
 }
 
 ul.pagination li.active a {
@@ -87,18 +115,4 @@ ul.pagination li a.active {
   width: 48px;
   height: 30px;
   color: #E1BEE7;
-}
-
-
-/* 글쓰기 버튼 설정*/
-.writeButton {
-  color: #E1BEE7;
-  background: white;
-  border-color: #E1BEE7;
-}
-
-.writeButton:hover {
-  color: white;
-  background-color: #E1BEE7;
-  border-color: #E1BEE7;
 }

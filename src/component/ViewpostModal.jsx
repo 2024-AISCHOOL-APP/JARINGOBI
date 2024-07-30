@@ -1,29 +1,27 @@
 // 필요한 라이브러리 및 컴포넌트 가져오기
-import './WritePostStyle.css'; // 커스텀 스타일
+import './ViewPostStyle.css'; // 커스텀 스타일
 
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS
 import { Card, Form } from 'react-bootstrap'; // 부트스트랩 컴포넌트
 import Swal from 'sweetalert2'; // SweetAlert2로 더 나은 알림 제공
 
 import EditPostModal from './EditPostModal'; // EditPostModal 게시글 수정 컴포넌트 import
 
-function ViewPostModal({ handleCloseModal }) { 
-    // postId : 현재 모달에서 보여주는 게시글 ID
-    // currentUserId : 현재 로그인한 사용자 ID, 사용자 ID로 삭제 및 수정 권한 확인
+function ViewPostModal({ postId, handleCloseModal }) { 
 
     const [post, setPost] = useState([]); // 서버로부터 게시글 정보 받기
-    const [showEditModal, setShowEditModal] = useState(false); // 수정 모달 상태
+    const [showEditModal, setShowEditModal] = useState(false); // 수정 모달 
 
     // 서버로부터 게시글 받아오기
     useEffect(() => {
         const getPost = async () => {
             try {
-                console.log('게시판 목록 요청 시작');
-                const response1 = await axios.get(`http://localhost:8000/${post.id}`); // API 엔드포인트 확인
+                console.log('특정 게시판 보기 요청');
+
+                const response1 = await axios.get(`http://localhost:8000/community/${postId}`); // API 엔드포인트 확인
 
                 console.log('게시글 목록 응답 수신:', response1.data);
                 setPost(response1.data); // 서버가 변환한 데이터를 post 변수에 저장
@@ -34,7 +32,7 @@ function ViewPostModal({ handleCloseModal }) {
             }
         };
             getPost();
-    }, [post]);
+    }, [postId]);
 
 
   // 게시글을 삭제하는 함수
@@ -52,7 +50,7 @@ function ViewPostModal({ handleCloseModal }) {
 
     // 실제 삭제 로직 구현
     try {
-        const response2 = await axios.delete(`http://localhost:8000/${post.id}`);
+        const response2 = await axios.delete(`http://localhost:8000/community/${postId}`);
         console.log('게시글 삭제:', response2.data);
         handleCloseModal();
     } catch (error) {
@@ -78,14 +76,8 @@ function ViewPostModal({ handleCloseModal }) {
 
     // 수정 버튼 클릭 시 수정 모달 창 열림
       handleCloseModal()
-      setShowEditModal(true);
+      setShowEditModal(postId);
   };
-
-    // useEffect(() => {
-    //     return () => {
-    //       setPost(null); // 모달이 닫힐 때 상태 초기화
-    //     };
-    //   }, []);
 
 
   return (
@@ -96,7 +88,7 @@ function ViewPostModal({ handleCloseModal }) {
           {post && (
             <>
               <Form.Label className="form-label">
-                    <small>작성자: {post.userId} &nbsp; 작성일: {post.editDate}</small>
+                    <small>작성자: {post.nickname} &nbsp; 작성일: {post.createdAt}</small>
               </Form.Label>
               <Form.Group controlId="formTitle" className="mb-4">
                   <div className="post-title">{post.title}</div>
@@ -111,7 +103,7 @@ function ViewPostModal({ handleCloseModal }) {
                   variant="outline-danger"
                 >
                   삭제
-                </Button>
+                </Button>&ensp;
 
                 <Button
                   onClick={reWritePost}
@@ -127,8 +119,8 @@ function ViewPostModal({ handleCloseModal }) {
       </Card>
       {showEditModal && post && ( // 게시글 수정 모달 열기
           <EditPostModal
-            handleCloseModal={() => setShowEditModal(false)}
-            postData={post}
+            handleCloseModal={() => setShowEditModal(true)}
+            postid={postId}
           />
       )}
     </div>

@@ -4,17 +4,21 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table'; // 게시판 목록 기능
-import { Link } from "react-router-dom"; // 게시글 입력/보기 이동
 import Pagination from 'react-js-pagination'; // 페이징 버튼 기능
 import "bootstrap/dist/css/bootstrap.min.css"; // 부트스트랩 기능
-import { Navbar, Nav, Container, Modal } from 'react-bootstrap'; // 모달 팝업 및 네비게이션 바 기능
+import { Modal } from 'react-bootstrap'; // 모달 팝업 기능
 import WritePostModal from './WritePostModal'; // WritePost 모달 컴포넌트 import
-import ViewPostModal from './ViewpostModal';// ViewPost 모달 컴포넌트 import
+import ViewPostModal from './ViewPostModal'; // ViewPost 모달 컴포넌트 import
+import EditPostModal from './EditPostModal'; // EditPost 모달 컴포넌트 import
+// import HttpClient from '../network/http';
 
 function Board() {
+
+    // const baseURL = process.env.REACT_APP_BASE_URL; 
+    // const httpClient = new HttpClient(baseURL); // Axios 외 서버 통신법
+    
     const [postList, setPostList] = useState([]); // 서버에서 받아올 게시글 데이터
     const [displayedPosts, setDisplayedPosts] = useState([]); // 게시판 목록에 보여줄 게시글
-
     const [page, setPage] = useState(1); // 현재 페이지
     const itemsPerPage = 8; // 한 페이지 당 8개 게시글 표시 제한
 
@@ -22,15 +26,18 @@ function Board() {
         setPage(pageNumber);
     };
 
-    // 서버에서 게시글 데이터 받아와 테이블에 표시
     const getPostList = async () => {
         try {
             console.log('게시판 목록 요청 시작');
-            const response = await axios.get('http://localhost:8000'); // API 엔드포인트 확인
-        
-            console.log('게시글 목록 응답 수신:', response.data);
+            const response = await axios.get('http://localhost:8000/community');
+            // console.log('게시글 목록 응답 수신:', response.data);
             const data = response.data // 서버가 변환한 데이터 가져오기
-        
+
+            // const data = await httpClient.fetch('/community', { // http://localhost:8000 생략가능
+            //     method: 'GET'
+            // });
+
+            console.log('게시글 목록 수신:', data);
             setPostList(data); // 역순 정렬된 데이터를 postList 변수에 저장
         
         } catch (error) {
@@ -56,7 +63,7 @@ function Board() {
         
             console.log('config 파일 오류:', error.config);
             alert('서버와의 연결에 에러가 발생했습니다!');
-        };
+        }
     }
 
     useEffect(() => {
@@ -78,64 +85,59 @@ function Board() {
     const handleCloseModal = () => setShowModal(false);
 
     // 게시글 보기 모달 관리
-    const [showPostModal, setShowPostModal] = useState(false)
-    const handleOpenPostModal = () => setShowPostModal(true);
+    const [showPostModal, setShowPostModal] = useState(false); // 게시물 ID 저장
     const handleClosePostModal = () => setShowPostModal(false);
 
 
     return (
-        <div className="App">
-            <Container>
-                <div className='communityTitle'>커뮤니티</div>
-            </Container>
-            <Container style={{ height: 'calc(100vh - 56px)', paddingLeft: '100px', paddingRight: '100px' }}>
-                <div>
-                    <Table striped bordered hover>
-                        <thead>
-                            <tr>
-                                <th>번호</th>
-                                <th>태그</th>
-                                <th style={{ width: '60%' }}>제목</th>
-                                <th>작성자</th>
-                                <th>작성일</th>
+        <div className="BoardContainer">
+            <div className='communityTitle'>커뮤니티</div>
+            <Table className="table" striped bordered hover>
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>태그</th>
+                        <th style={{ width: '55%' }}>제목</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {displayedPosts && displayedPosts.length > 0 ? (
+                        displayedPosts.map(post => (
+                            <tr key={post.id}>
+                                <td>{post.id.toString().padStart(4, '0')}</td>
+                                <td>{post.tag}</td>
+                                <td onClick={() => setShowPostModal(post.id)}>{post.title}</td>
+                                <td>{post.nickname}</td>
+                                <td>{post.createdAt}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {displayedPosts && displayedPosts.length > 0 ? (
-                                displayedPosts.map(post => (
-                                    <tr key={post.id}>
-                                        <td>{post.id.toString().padStart(4, '0')}</td>
-                                        <td>{post.tag}</td>
-                                        <td onClick={handleOpenPostModal}>{post.title}</td>
-                                        <td>{post.id}</td>
-                                        <td>{post.editDate}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="6" className="text-center">게시글이 없습니다.</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </Table>
-                    <Button className='writeButton' onClick={handleOpenModal}>글쓰기</Button>
-                </div>
-                <div className="d-flex justify-content-center">
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="6" className="text-center">게시글이 없습니다.</td>
+                        </tr>
+                    )}
+                </tbody>
+            </Table>
+            <div className="bottomSection">
+                <Button className='writeButton' onClick={handleOpenModal}>글쓰기</Button>
+                <div className="paginationContainer">
                     <Pagination
-                        activePage={page} // 현재 페이지
-                        itemsCountPerPage={itemsPerPage} // 한 페이지 및 보여줄 아이템 갯수
-                        totalItemsCount={postList.length} // 총 아이템 수, 실제 서버 구동 시 postLIst 작성
-                        pageRangeDisplayed={5} // paginator의 페이지 범위
-                        prevPageText={"‹"} // "이전"을 나타낼 텍스트
-                        nextPageText={"›"} // "다음"을 나타낼 텍스트
-                        onChange={paging} // 페이지 변경을 핸들링하는 함수
+                        activePage={page}
+                        itemsCountPerPage={itemsPerPage}
+                        totalItemsCount={postList.length || 0}
+                        pageRangeDisplayed={5}
+                        prevPageText={"‹"}
+                        nextPageText={"›"}
+                        onChange={paging}
                     />
                 </div>
-            </Container>
+            </div>
 
             <Modal  // 게시글 입력 모달
                     show={showModal} 
-                    onHide={handleCloseModal} 
+                    onHide={handleCloseModal}
                     size="lg" // Bootstrap 사이즈 옵션 사용
                     className="custom-modal" // 커스텀 CSS 클래스 추가
                 >
@@ -147,8 +149,8 @@ function Board() {
                 </Modal.Body>
             </Modal>
 
-            <Modal // 게시글 보기 모달
-                    show={showPostModal} 
+            {showPostModal && <Modal // 게시글 보기 모달
+                    show={showPostModal}
                     onHide={handleClosePostModal} 
                     size="lg" // Bootstrap 사이즈 옵션 사용
                     className="custom-modal" // 커스텀 CSS 클래스 추가
@@ -157,8 +159,14 @@ function Board() {
                     <Modal.Title>게시글</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <ViewPostModal handleCloseModal={handleClosePostModal} />
+                    <ViewPostModal postId={showPostModal} handleCloseModal={handleClosePostModal} />
                 </Modal.Body>
+            </Modal>}
+
+            <Modal // 게시물 수정 모달
+
+            >
+
             </Modal>
         </div>
     );

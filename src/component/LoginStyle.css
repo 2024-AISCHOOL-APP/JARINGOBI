@@ -10,37 +10,32 @@
 
 .Logincontainer {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
 .pennybody {
-  width: 200px;
-  height: 200px;
-  border-color: black;
+  max-width: 50%;
+  height: auto;
   border-radius: 2em;
-  margin-left: var(--m-left);
-  margin-top: var(--m-top);
 }
 
 .text {
   font-family: var(--f);
-  margin-left: var(--m-left);
-  padding-top: 20px;
+  /* margin-left: var(--m-left);
+  padding-top: 20px; */
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 10px;
 }
-
-.left-section {
-  display: flex;
-  /* justify-content: ;
-    align-items: ; */
-  flex-direction: column;
-}
-
-.right-section {
+.left-section, .right-section {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-top: var(--m-top);
-  margin-left: 150px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .buttons {
@@ -64,4 +59,24 @@
 }
 .kakao img {
   width: 100%;
+}
+@media (min-width: 768px) {
+  .Logincontainer {
+      flex-direction: row;
+  }
+
+  .left-section, .right-section {
+      width: 50%;
+  }
+
+  .text {
+      font-size: 2rem;
+  }
+}
+
+@media (max-width: 767px) {
+
+  .text {
+      font-size: 1.2rem;
+  }
 }

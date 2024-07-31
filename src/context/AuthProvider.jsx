@@ -28,6 +28,14 @@ export function AuthProvider({ authService, children }) {
     [authService]
   );
 
+  const kakaoLogIn = useCallback(
+    async (code) =>
+      authService.kakaoLogin(code).then((user) => {
+        setUser(user);
+      }),
+    [authService]
+  );
+
   const logOut = useCallback(async () => authService.logout().then(() => setUser(undefined)), [authService]);
 
   const context = useMemo(
@@ -35,12 +43,17 @@ export function AuthProvider({ authService, children }) {
       user,
       signUp,
       logIn,
+      kakaoLogIn,
       logOut,
     }),
-    [user, signUp, logIn, logOut]
+    [user, signUp, logIn, logOut, kakaoLogIn]
   );
 
-  return <AuthContext.Provider value={context}>{user ? children : <Login onLogin={logIn} onSignup={signUp} />}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={context}>
+      {user ? children : <Login onLogin={logIn} onSignup={signUp} onKakao={kakaoLogIn} />}
+    </AuthContext.Provider>
+  );
 }
 
 export const useAuth = () => useContext(AuthContext);

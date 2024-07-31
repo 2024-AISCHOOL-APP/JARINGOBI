@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default class AuthService {
   constructor(http, tokenStorage) {
     this.http = http;
@@ -32,6 +34,17 @@ export default class AuthService {
     });
     this.tokenStorage.saveToken(data.token);
     return data;
+  }
+
+  async kakaoLogin(code) {
+    try {
+      const response = await axios.get(`http://localhost:8000/oauth/callback/kakao?code=${code}`);
+      this.tokenStorage.saveToken(response.data.token);
+      return response.data;
+    } catch (error) {
+      console.error('Error during Kakao login:', error);
+      throw error;
+    }
   }
 
   async me() {

@@ -1,28 +1,49 @@
-.Navbar {
-  opacity: 0.5;
-  width: auto;
-  position: relative;
-  background: linear-gradient(180deg, #E1BEE7 0%, #F8BBD0 50%, #ffffff 100%);
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: inherit;
+  text-decoration: none;
+}
+.navbar {
+  box-shadow: 0 3px 5px #cccccc9a;
+  padding: 10px 0;
+  box-sizing: border-box;
+  height: 100px;
+}
+.container {
+  width: 80%;
+  box-sizing: border-box;
 }
 
-.Container {
+.navlogo {
+  color: rgb(80, 80, 80);
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 1px;
   display: flex;
-  justify-content: space-between; 
-  align-items: center; 
-}
-
-.Navlogo {
-  font-family: var(--f);
-  color: black;
-  padding-bottom: 10px;
-}
-
-.Navbar .navbar-collapse {
-  display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
-}
-.ml-auto{
-  margin-left: auto;
+  justify-content: space-around;
   align-items: center;
-  margin-bottom: 1rem;
+}
+.navlogo img {
+  width: 70px;
+}
+
+.logo-user {
+  font-size: 16px;
+  font-weight: normal;
+  color: rgb(115, 154, 202);
+  margin-left: 5px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  color: rgb(80, 80, 80);
+  font-size: 18px;
+}
+
+.nav-link {
+  padding: 15px 5px;
+  margin-left: 20px;
 }

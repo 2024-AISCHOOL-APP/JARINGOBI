@@ -18,74 +18,54 @@ body {
   font-family: var(--f);
 }
 
-.landing-page {
+.landing-container {
+  width: 1000px;
+  height: calc(100vh - 100px);
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   align-items: center;
-  background: white;
 }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto;
-  gap: 20px;
-  width: 80%;
-  margin: 20px auto;
-}
-
-.grid-item {
+.main {
+  width: 100%;
+  height: 32%;
+  border-radius: 20px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  color: rgb(80, 80, 80);
+  box-shadow: 0 3px 5px #99999980;
+}
+
+.main .txt {
+  width: 100%;
+  font-size: 45px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 30px;
+}
+.one .txt {
+  text-align: right;
+}
+.one img {
+  width: 220px;
+}
+
+.two .txt {
   text-align: center;
 }
-
-.logo-section {
-  grid-column: span 2;
+.two img {
+  width: 230px;
+  position: relative;
+  top: 20px;
 }
 
-.logo-image {
-  width: 100px; /* 필요에 따라 조정 */
+.thr {
 }
-
-.logo-text {
-  font-size: 24px; /* 필요에 따라 조정 */
-  font-family: var(--f);
-}
-
-.main-text,
-.description {
-  font-family: 'Roboto', sans-serif;
-  font-size: 18px;
-}
-
-.purple-button {
-  background-color: #6f42c1;
-  border-color: #6f42c1;
-  color: white;
-  margin-top: 20px;
-}
-
-.purple-button:hover {
-  background-color: #5936a3;
-  border-color: #5936a3;
-}
-
-.Carousel {
-  grid-column: span 2;
-  width: 80%;
-  margin-top: 20px;
-}
-
-.Carousel img {
-  width: 100%;
-  height: auto;
-}
-
-.purple-button {
-  background-color: #6f42c1 !important;
-  border-color: #6f42c1;
-  color: white;
+.thr img {
+  width: 220px;
 }

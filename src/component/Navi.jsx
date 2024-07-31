@@ -1,28 +1,33 @@
 import React, { memo } from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import './Navi.css';
 
 const Navi = memo(({ userId, onLogout }) => {
   return (
-    <Navbar className='Navbar'>
-      <Container className='Container'>
-        <Navbar.Brand className='Navlogo' href='./'>
+    <nav className='navbar'>
+      <div className='container'>
+        <Link className='navlogo' to='/'>
+          <img className='logo-image' src='img/pennywise.png' alt='logo' />
           PennyWise
-        </Navbar.Brand>
-        {userId && <span className='logo-user'>@{userId}</span>}
-        <Navbar.Toggle aria-controls='basic-navbar-nav' />
-        <Navbar.Collapse id='basic-navbar-nav'>
-          <Nav className='ml-auto'>
-            <Nav.Link href='/Main'>가계부</Nav.Link>
-            <Nav.Link href='/dashboard'>가계부 분석</Nav.Link>
-            <Nav.Link href='/Community'>커뮤니티</Nav.Link>
-            <Nav.Link as='button' onClick={onLogout}>
-              로그아웃
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+          {userId && <span className='logo-user'>@{userId}</span>}
+        </Link>
+
+        <div className='nav-links'>
+          <Link className='nav-link' to='/main'>
+            가계부
+          </Link>
+          <Link className='nav-link' to='/dashboard'>
+            가계부 분석
+          </Link>
+          <Link className='nav-link' to='/community'>
+            커뮤니티
+          </Link>
+          <button className='nav-link' onClick={onLogout}>
+            로그아웃
+          </button>
+        </div>
+      </div>
+    </nav>
   );
 });
 

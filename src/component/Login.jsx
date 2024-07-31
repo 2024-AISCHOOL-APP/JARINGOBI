@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginStyle.css';
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ onLogin, onSignup }) => {
+const Login = ({ onLogin, onSignup, onKakao }) => {
+  const navigate = useNavigate();
+
   const [signup, setSignup] = useState(false);
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
@@ -12,10 +15,27 @@ const Login = ({ onLogin, onSignup }) => {
   const [gender, setGender] = useState('여성');
   const [classification, setClassification] = useState('사용자');
 
+  const restApi = process.env.REACT_APP_KAKAO_RESTAPI_KEY;
+  const redirectUrl = process.env.REACT_APP_KAKAO_REDIRECT_URL;
+
+  const kakaoApi = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${restApi}&redirect_uri=${redirectUrl}&scope=profile_nickname,account_email`;
+
+  const handleLogin = () => {
+    window.location.href = kakaoApi;
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      onKakao(code);
+      navigate('/');
+    }
+  });
+
   const onSubmit = (event) => {
     event.preventDefault();
     if (signup) {
-      console.log(id, pw, name, nick, email, addr, gender, classification);
       onSignup(id, pw, name, nick, email, addr, gender, classification).catch(() => console.log('Signup Error!'));
     } else {
       onLogin(id, pw).catch(() => console.log('Login Error!'));
@@ -50,7 +70,7 @@ const Login = ({ onLogin, onSignup }) => {
   };
 
   return (
-    <div className='container'>
+    <div className='login_container'>
       <img src='https://picsum.photos/500' alt='회원가입 이미지' />
       <form className='auth-form' onSubmit={onSubmit}>
         <h5>아이디 </h5>
@@ -98,9 +118,14 @@ const Login = ({ onLogin, onSignup }) => {
           <input name='signup' id='signup' type='checkbox' onChange={onChange} checked={signup} />
           <label htmlFor='signup'> 회원가입이 필요하신가요?</label>
         </div>
-        <button type='submit' className='auth-btn'>
-          {signup ? '가입하기' : '로그인하기'}
-        </button>
+        <div className='sign'>
+          <button type='submit' className='auth-btn'>
+            {signup ? '가입하기' : '로그인하기'}
+          </button>
+          <button className='kakao' onClick={handleLogin}>
+            <img src='img/kakao_login.png' alt='카카오로그인' />
+          </button>
+        </div>
       </form>
     </div>
   );

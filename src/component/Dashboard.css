@@ -81,11 +81,17 @@
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
+    transition: background-color 0.3s, color 0.3s; /* 호버 애니메이션 추가 */
 }
 
 .stats-btn.active {
     background-color: #007bff;
     color: #fff;
+}
+
+.stats-btn:hover {
+    background-color: #007bff; /* 호버 시 배경 색상 */
+    color: #fff; /* 호버 시 글자 색상 */
 }
 
 /* 통계 콘텐츠 스타일 */
@@ -99,31 +105,152 @@
 /* 월간 통계 스타일 */
 .monthly-stats {
     display: flex;
-    align-items: stretch;
-    justify-content: space-between;
+    flex-direction: column; /* Use column direction for better stacking */
+    align-items: center; /* Center the content horizontally */
+    justify-content: flex-start; /* Align items at the top */
     padding: 20px 0;
-    /* 상하 여백 */
     gap: 20px;
-    /* 차트와 항목 사이의 공간 추가 */
 }
 
+/* 월간 내비게이션 스타일 */
+.month-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Gap between buttons and month */
+    margin-bottom: 10px; /* Margin at the bottom for separation */
+}
+
+.month-navigation h3 {
+    font-size: 24px; /* Make the month display larger */
+    margin: 0; /* Remove default margins */
+}
+
+/* 버튼 스타일 */
+.month-navigation button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.month-navigation button:hover {
+    background-color: #0056b3;
+}
+
+/* 차트 컨테이너 스타일 */
 .chart-container {
-    flex: 1;
+    width: 100%;
+    max-width: 1000px; 
     padding-right: 20px;
     box-sizing: border-box;
-    /* 항목 사이 구분선 */
+}
+
+.chart-containerPie {
+    width: 100%;
+    border-right: 1px solid #e0e0e0;
+}
+
+/* 월간 통계 스타일 */
+.monthly-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    gap: 20px;
+}
+
+/* 월간 내비게이션 스타일 */
+.month-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.month-navigation h3 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.month-navigation button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.month-navigation button:hover {
+    background-color: #0056b3;
+}
+
+/* 월간 통계 본문 스타일 */
+.monthly-stats-body {
+    display: flex;
+    justify-content: space-between; /* Space between pie chart and stats */
+    align-items: center; /* Align items vertically centered */
+    width: 100%;
+    max-width: 1000px; /* Max width to prevent overflow */
+    padding: 0 20px; /* Horizontal padding */
+    box-sizing: border-box;
+}
+
+/* 차트 컨테이너 스타일 */
+.chart-container {
+    flex: 1;
+    padding-right: 20px; /* Spacing between chart and stats */
+    box-sizing: border-box;
 }
 
 .chart-containerPie {
     border-right: 1px solid #e0e0e0;
-    /* 항목 사이 구분선 */
 }
 
+/* 월간 통계 정보 스타일 */
 .monthly-stats-info {
     flex: 1;
-    padding-left: 20px;
+    padding-left: 20px; /* Padding to separate from chart */
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left; /* Align text to the left */
 }
+
+.monthly-stats-info p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+/* 반응형 레이아웃 조정 */
+@media (max-width: 1000px) {
+    .monthly-stats-body {
+        flex-direction: column; /* Switch to column on smaller screens */
+        align-items: center;
+    }
+
+    .chart-container,
+    .monthly-stats-info {
+        width: 100%;
+        padding: 0;
+        border-right: none;
+        text-align: center; /* Center text on smaller screens */
+    }
+
+    .monthly-stats-info {
+        margin-top: 20px;
+    }
+}
+
 
 /* 연간 통계 스타일 */
 .annual-stats {
@@ -137,11 +264,13 @@
 }
 
 .annual-stats-info {
+    flex: 1;
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
     /* text-align: center;  */
     /* 항목 중앙 정렬 */
+    
 }
 
 .chart-container {

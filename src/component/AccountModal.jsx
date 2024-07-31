@@ -11,6 +11,7 @@ const AccountModal = ({
     titleRef,
     moneyRef,
     memoRef,
+    event
 }) => {
     const selectRef = useRef();
 
@@ -51,9 +52,16 @@ const AccountModal = ({
     useEffect(() => {
         if (isOpen) {
             // 모달이 열릴 때만 상태를 업데이트
-            setInputTitle(titleRef || '');
-            setInputMoney(moneyRef || '');
-            setInputMemo(memoRef || '');
+            if (event) {
+                setInputTitle(event.item.title || '');
+                setInputMoney(event.item.extendedProps.amount || '');
+                setInputMemo(event.item.extendedProps.description || '');
+            } else {
+                setInputTitle(event.title || '');
+                setInputMoney(moneyRef || '');
+                setInputMemo(memoRef || '');
+            }
+
         }
     }, [isOpen, titleRef, moneyRef, memoRef]);
 

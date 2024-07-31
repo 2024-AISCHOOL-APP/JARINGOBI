@@ -9,7 +9,7 @@ import { useAuth } from './context/AuthProvider';
 import AllPosts from './pages/AllPosts';
 import MyPosts from './pages/MyPosts';
 
-function App({ postService }) {
+function App({ postService, accountService }) {
   const { user, logOut } = useAuth();
   const navigate = useNavigate();
   const onLogout = () => {
@@ -19,18 +19,16 @@ function App({ postService }) {
     }
   };
 
-  console.log(user);
-
   return (
     <>
       <Navi userId={user.id} onLogout={onLogout} />
       <Routes>
         <Route path='/' element={<Response />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/main' element={<Calendar />} />
+        <Route path='/main' element={<Calendar accountService={accountService}/>} />
         <Route exact path='/Community' element={<AllPosts postService={postService} />} />
         <Route exact path='/Community/:userId' element={<MyPosts postService={postService} />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/dashboard' element={<Dashboard accountService={accountService}/>} />
       </Routes>
     </>
   );

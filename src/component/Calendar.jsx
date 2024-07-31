@@ -1,47 +1,85 @@
-import './CalendarStyle.css'; // 캘린더 스타일 설정
-
-import React, { useState, useRef } from 'react';
+import './CalendarStyle.css';
+import React, { useState, useRef, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from "@fullcalendar/interaction"; // 날짜칸 클릭 기능
-import koLocale from '@fullcalendar/core/locales/ko'; // 한국어 로케일
-import Swal from 'sweetalert2'
-
-import "bootstrap/dist/css/bootstrap.min.css"; // 부트스트랩 기능
-import { Navbar, Nav, Container } from 'react-bootstrap'; // 모달 팝업 및 네비게이션 바 기능
+import interactionPlugin from "@fullcalendar/interaction";
+import koLocale from '@fullcalendar/core/locales/ko';
+import Swal from 'sweetalert2';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Container } from 'react-bootstrap';
 import AccountModal from './AccountModal';
 import AccountList from './AccountList';
+import { useAuth } from '../context/AuthProvider';
 
 
-function MyCalendar() {
-    const [modalState, setModalState] = useState({ isOpen: false, type: null }); // 모달 상태 변수
-    const [selectedDate, setSelectedDate] = useState(""); // 선택된 날짜 state 변수
-    const [events, setEvents] = useState([ // 이벤트 state 변수
-        { title: '12300', date: '2024-07-15', textColor: 'blue' },
-        { title: '49000', date: '2024-07-25', textColor: 'red' },
-        { title: '33300', date: '2024-07-11', textColor: 'red' },
-    ]);
+function Calendar({ accountService }) {
+    const { user } = useAuth();
+    const [modalState, setModalState] = useState({ isOpen: false, type: null }); 
+    const [selectedDate, setSelectedDate] = useState(""); 
+    const [events, setEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState({ title: "", money: "", memo: "" });
-
+    const [accountsMonth, setAccountsMonth] = useState(null);
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
+    const [filteredEvents, setFilteredEvents] = useState([]);
     const selectRef = useRef();
 
+    useEffect(() => {
+        accountService
+            .getAccounts(user.userId, currentYear, currentMonth)
+            .then((accounts) => {
+                setAccountsMonth([...accounts]);
+            })
+    }, [currentMonth]);
+
+    useEffect(() => {
+        if (accountsMonth) {
+            const formattedEvents = accountsMonth.map(item => ({
+                title: item.title,
+                start: item.createdAt.split('T')[0], 
+                textColor: item.first_category === 1 ? 'blue' : 'red',
+                extendedProps: item 
+            }));
+            setEvents(formattedEvents);
+        }
+    }, [accountsMonth]);
+
+    let eventsForDate = null;
+    // 날짜 클릭 핸들러
     const handleDateClick = (arg) => {
-        setSelectedDate(arg.dateStr); // 날짜 설정
-        setSelectedEvent({ title: "", money: "", memo: "" });
-        setModalState({ isOpen: true, type: 'AccountModal' }); // 모달창 열기
+        const clickedDate = arg.dateStr;
+        setSelectedDate(clickedDate);
+
+        // 선택한 날짜에 이벤트가 있는지 확인
+        const eventExists = events.some(event => event.start === clickedDate);
+        if (eventExists) {
+            // 이벤트가 있는 경우, AccountModal 열기
+            setSelectedEvent({ title: "", money: "", memo: "" });
+            setModalState({ isOpen: true, type: 'AccountList' });
+        } else {
+            // 이벤트가 없는 경우, AccountList 열기
+            setModalState({ isOpen: true, type: 'AccountModal' });
+        }
+
+        // 선택한 날짜에 해당하는 이벤트 필터링
+        eventsForDate = events.filter(event => event.start === clickedDate);
+        setFilteredEvents(eventsForDate); // 필터링된 이벤트를 상태로 설정
+        console.log(eventsForDate);
     };
 
+    // 모달 닫기 핸들러
     const handleCloseModal = () => {
         setModalState({ isOpen: false, type: null }); // 모달창 닫기
     };
-    
+
+    // 이벤트 추가 핸들러
     const handleAppendEvent = (inputTitle, inputMoney, inputMemo) => {
         const selectedType = selectRef.current.value;
         const newEvent = {
-            money: inputMoney, // inputMoney를 사용해야 합니다
-            title: inputTitle, // inputTitle을 사용해야 합니다
+            money: inputMoney,
+            title: inputTitle,
             date: selectedDate,
-            memo: inputMemo, // inputMemo를 사용해야 합니다
+            memo: inputMemo,
             textColor: selectedType === '수입' ? 'blue' : 'red',
             backgroundColor: 'white',
         };
@@ -67,7 +105,12 @@ function MyCalendar() {
         });
     };
 
+    // 이벤트 클릭 핸들러
     const eventClick = (info) => {
+        const clickedDate = info.event.startStr;
+        eventsForDate = events.filter(event => event.start === clickedDate);
+        setFilteredEvents(eventsForDate); // 필터링된 이벤트를 상태로 설정
+        console.log(eventsForDate);
         if (!info.event.title) {
             setSelectedEvent({
                 title: info.event.title,
@@ -80,31 +123,24 @@ function MyCalendar() {
             setModalState({ isOpen: true, type: 'AccountList' }); // 모달창 열기
             setSelectedDate(info.event.startStr); // 선택된 날짜 업데이트
         }
+
     };
 
-    // const groupEventsByMonth = (events) => {
-    //     return events.reduce((acc, event) => {
-    //         const month = event.date.slice(0, 7); // YYYY-MM 형식으로 추출
-    //         if (!acc[month]) {
-    //             acc[month] = { income: 0, expense: 0 };
-    //         }
-    //         const money = parseFloat(event.money) || 0;
-    //         if (event.textColor === 'blue') {
-    //             acc[month].income += money;
-    //         } else {
-    //             acc[month].expense += money;
-    //         }
-    //         return acc;
-    //     }, {});
-    // };
+    const handleMonthChange = (newYear, newMonth) => {
+        setCurrentYear(newYear);
+        setCurrentMonth(newMonth);
+    };
 
-    // const groupedEvents = groupEventsByMonth(events);
-    // console.log(groupedEvents); // 월별 수입과 지출 데이터를 확인하는 용도
+    const handleDatesSet = (dateInfo) => {
+        const { view } = dateInfo;
+        const newMonth = view.currentStart.getMonth() + 1; // getMonth()는 0부터 시작
+        const newYear = view.currentStart.getFullYear();
+        handleMonthChange(newYear, newMonth);
+    };
 
     return (
         <div className="App">
-            
-            <Container  className='fullContainer' fluid style={{ height: 'calc(100vh - 56px)', paddingLeft: '150px', paddingRight: '150px'}}>
+            <Container className='fullContainer' fluid style={{ height: 'calc(100vh - 56px)', paddingLeft: '150px', paddingRight: '150px' }}>
                 <FullCalendar
                     headerToolbar={{ // 달력 상단 설정
                         left: "prev next", // 왼쪽에 이전/다음달 및 오늘 버튼
@@ -118,6 +154,7 @@ function MyCalendar() {
                     locale={koLocale} // 한국어로 설정
                     dateClick={handleDateClick} // 날짜 클릭 시 이벤트 발생
                     height="100%" // 캘린더 높이를 100%로 설정
+                    datesSet={handleDatesSet} // 달력의 날짜 범위가 설정될 때 호출되는 핸들러
                 />
             </Container>
 
@@ -142,10 +179,11 @@ function MyCalendar() {
                     selectedDate={selectedDate}
                     titleRef={selectedEvent.title}
                     moneyRef={selectedEvent.money}
+                    events={filteredEvents} // 필터링된 이벤트 목록 전달
                 />
             )}
         </div>
     );
 }
 
-export default MyCalendar;
+export default Calendar;

@@ -1,30 +1,30 @@
 // Category enum 정의
 export const FirstCategory = {
-    1: '수입',
-    2: '지출'
-  };
-  
-  // 수입에 해당하는 second_category 정의
-  export const IncomeSecondCategory = {
-    1: '배당금',
-    2: '예금',
-    3: '기타수입',
-    4: '고정수입'
-  };
-  
-  // 지출에 해당하는 second_category 정의
-  export const ExpenseSecondCategory = {
-    1: '식비',
-    2: '교통비',
-    3: '의류비',
-    4: '고정지출'
-  };
-  
+  1: '수입',
+  2: '지출',
+};
+
+// 수입에 해당하는 second_category 정의
+export const IncomeSecondCategory = {
+  1: '배당금',
+  2: '예금',
+  3: '기타수입',
+  4: '고정수입',
+};
+
+// 지출에 해당하는 second_category 정의
+export const ExpenseSecondCategory = {
+  1: '식비',
+  2: '교통비',
+  3: '의류비',
+  4: '고정지출',
+};
+
 // 통계 계산
 export const calculateStatistics = (data) => {
   const result = {};
 
-  Object.values(data).forEach(entry => {
+  Object.values(data).forEach((entry) => {
     const { first_category, second_category, amount } = entry;
 
     if (!result[first_category]) {
@@ -50,13 +50,15 @@ export const formatStatistics = (statistics) => {
     const categoryName = FirstCategory[firstCatKey];
     formatted[categoryName] = {
       total: data.total,
-      items: {}
+      items: {},
     };
 
     for (const [secondCatKey, amount] of Object.entries(data.items)) {
-      if (firstCatKey == 1) { // 수입
+      if (firstCatKey === 1) {
+        // 수입
         formatted[categoryName].items[IncomeSecondCategory[secondCatKey]] = amount;
-      } else if (firstCatKey == 2) { // 지출
+      } else if (firstCatKey === 2) {
+        // 지출
         formatted[categoryName].items[ExpenseSecondCategory[secondCatKey]] = amount;
       }
     }
@@ -68,7 +70,7 @@ export const formatStatistics = (statistics) => {
 export const calculateMonthlyStatistics = (data) => {
   const result = {};
 
-  data.forEach(entry => {
+  data.forEach((entry) => {
     const { createdAt, first_category, second_category, amount } = entry;
 
     let month;
@@ -82,7 +84,7 @@ export const calculateMonthlyStatistics = (data) => {
     if (!result[month]) {
       result[month] = {
         수입: { total: 0, subItems: {} },
-        지출: { total: 0, subItems: {} }
+        지출: { total: 0, subItems: {} },
       };
     }
 
@@ -107,12 +109,12 @@ export const formatMonthlyStatistics = (statistics) => {
     formatted[formattedMonth] = {
       수입: {
         total: data['수입'].total || 0,
-        subItems: data['수입'].subItems || {}
+        subItems: data['수입'].subItems || {},
       },
       지출: {
         total: data['지출'].total || 0,
-        subItems: data['지출'].subItems || {}
-      }
+        subItems: data['지출'].subItems || {},
+      },
     };
   }
 

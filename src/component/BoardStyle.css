@@ -8,6 +8,7 @@
 
 body {
   font-family: var(--f);
+  color: rgb(80, 80, 80);
 }
 
 .board-container {
@@ -19,7 +20,114 @@ body {
 .title {
   width: 100%;
   color: rgb(80, 80, 80);
-  padding: 20px 0;
+  padding-top: 20px;
   font-size: 24px;
   font-weight: 500;
+}
+.board-header {
+  width: 100%;
+  border-top: 2px solid rgb(80, 80, 80);
+  box-sizing: border-box;
+  border-bottom: 2px solid rgba(187, 187, 187, 0.385);
+  display: flex;
+  height: 60px;
+}
+.no {
+  width: 10%;
+}
+.category {
+  width: 15%;
+  color: rgb(216, 87, 109);
+  cursor: pointer;
+}
+.post-title {
+  width: 35%;
+}
+.nick {
+  width: 15%;
+}
+.time {
+  width: 15%;
+}
+.like {
+  width: 10%;
+}
+
+.board-header p {
+  height: 100%;
+  line-height: 60px;
+  text-align: center;
+}
+
+.board-list {
+  margin: 0;
+  padding: 0;
+}
+
+.board-item {
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(80, 80, 80, 0.208);
+  display: flex;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+}
+.board-item:hover {
+  background-color: rgba(115, 154, 202, 0.174);
+  cursor: pointer;
+}
+.board-item .category {
+  cursor: default;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+  list-style: none;
+  gap: 5px;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  display: block;
+  padding: 5px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  color: rgb(80, 80, 80);
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.page-link:hover {
+  background-color: #e9ecef;
+  color: #0056b3;
+}
+
+.active .page-link {
+  background-color: #b0cbe7;
+  color: white;
+  border-color: #b0cbe7;
+}
+
+.active-link {
+  background-color: #007bff;
+  color: white;
+  pointer-events: none;
+}
+
+.page-link.prev,
+.page-link.next {
+  font-size: 1.2em;
+}
+
+.bottomSection {
+  width: 100%;
+  display: flex;
+  padding: 10px 0;
+  justify-content: flex-end;
 }

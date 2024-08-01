@@ -1,213 +1,207 @@
 import { memo, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthProvider';
-
+import parseDate from '../util/date';
+import Pagination from 'react-js-pagination';
+import Button from 'react-bootstrap/Button';
+import { Modal } from 'react-bootstrap';
+import WritePostModal from './WritePostModal';
+import ViewPostModal from './ViewpostModal';
+import EditPostModal from './EditPostModal';
 import './BoardStyle.css';
-// import axios from 'axios';
-// import React, { useState, useEffect } from 'react';
-// import Button from 'react-bootstrap/Button';
-// import Table from 'react-bootstrap/Table'; // 게시판 목록 기능
-// import Pagination from 'react-js-pagination'; // 페이징 버튼 기능
-// import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 기능
-// import { Modal } from 'react-bootstrap'; // 모달 팝업 기능
-// import WritePostModal from './WritePostModal'; // WritePost 모달 컴포넌트 import
-// import ViewPostModal from './ViewPostModal'; // ViewPost 모달 컴포넌트 import
-// import EditPostModal from './EditPostModal'; // EditPost 모달 컴포넌트 import
-
-// function Board() {
-//   const [postList, setPostList] = useState([]); // 서버에서 받아올 게시글 데이터
-//   const [displayedPosts, setDisplayedPosts] = useState([]); // 게시판 목록에 보여줄 게시글
-//   const [page, setPage] = useState(1); // 현재 페이지
-//   const itemsPerPage = 8; // 한 페이지 당 8개 게시글 표시 제한
-
-//   const [showModal, setShowModal] = useState(false); // 글쓰기 모달 상태
-//   const [postIdForView, setPostIdForView] = useState(null); // 게시글 보기 모달 상태 및 ID
-//   const [postIdForEdit, setPostIdForEdit] = useState(null); // 게시글 수정 모달 상태 및 ID
-
-//   const paging = (pageNumber) => {
-//     // 페이지 이동
-//     setPage(pageNumber);
-//   };
-
-//   const getPostList = async () => {
-//     try {
-//       const response = await axios.get('http://localhost:8000/community');
-//       const data = response.data; // 서버가 변환한 데이터 가져오기
-//       setPostList(data); // 역순 정렬된 데이터를 postList 변수에 저장
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     getPostList(); // 처음 랜더링 때 getPostLIst 호출해 데이터 가져옴
-//   }, []);
-
-//   useEffect(() => {
-//     if (Array.isArray(postList)) {
-//       setDisplayedPosts(postList.slice((page - 1) * itemsPerPage, page * itemsPerPage)); // 페이지 변경 시 갱신
-//     } else {
-//       setDisplayedPosts([]);
-//     }
-//   }, [postList, page]); // postList, page 변경될 때마다 displayPosts 업데이트
-
-//   // 글쓰기, 글보기, 글수정 모달 관리
-//   const handleOpenWriteModal = () => setShowModal(true);
-//   const handleCloseWriteModal = () => setShowModal(false);
-
-//   const handleOpenViewModal = (postId) => {
-//     setPostIdForView(postId);
-//     setPostIdForEdit(null); // 글수정 모달 상태 초기화
-//   };
-
-//   const handleCloseViewModal = () => setPostIdForView(null);
-
-//   const handleOpenEditModal = (postId) => {
-//     setPostIdForEdit(postId);
-//     setPostIdForView(null); // 글보기 모달 상태 초기화
-//   };
-//   const handleCloseEditModal = () => setPostIdForEdit(null);
-
-//   return (
-//     <div className='BoardContainer'>
-//       <div className='communityTitle'>커뮤니티</div>
-//       <Table className='table' striped bordered hover>
-//         <thead>
-//           <tr>
-//             <th>번호</th>
-//             <th>태그</th>
-//             <th style={{ width: '55%' }}>제목</th>
-//             <th>작성자</th>
-//             <th>작성일</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {displayedPosts && displayedPosts.length > 0 ? (
-//             displayedPosts.map((post) => (
-//               <tr key={post.id}>
-//                 <td>{post.id.toString().padStart(4, '0')}</td>
-//                 <td>{post.tag}</td>
-//                 <td onClick={() => handleOpenViewModal(post.id)}>{post.title}</td>
-//                 <td>{post.nickname}</td>
-//                 <td>{post.createdAt}</td>
-//               </tr>
-//             ))
-//           ) : (
-//             <tr>
-//               <td colSpan='6' className='text-center'>
-//                 게시글이 없습니다.
-//               </td>
-//             </tr>
-//           )}
-//         </tbody>
-//       </Table>
-//       <div className='bottomSection'>
-//         <Button className='writeButton' onClick={handleOpenWriteModal}>
-//           글쓰기
-//         </Button>
-//         <div className='paginationContainer'>
-//           <Pagination
-//             activePage={page}
-//             itemsCountPerPage={itemsPerPage}
-//             totalItemsCount={postList.length || 0}
-//             pageRangeDisplayed={5}
-//             prevPageText={'‹'}
-//             nextPageText={'›'}
-//             onChange={paging}
-//           />
-//         </div>
-//       </div>
-
-//       <Modal // 게시글 입력 모달
-//         show={showModal}
-//         onHide={handleCloseWriteModal}
-//         size='lg' // Bootstrap 사이즈 옵션 사용
-//         className='custom-modal' // 커스텀 CSS 클래스 추가
-//       >
-//         <Modal.Header closeButton>
-//           <Modal.Title>글쓰기</Modal.Title>
-//         </Modal.Header>
-//         <Modal.Body>
-//           <WritePostModal handleCloseModal={handleCloseWriteModal} />
-//         </Modal.Body>
-//       </Modal>
-
-//       {postIdForView !== null && (
-//         <Modal // 게시글 보기 모달
-//           show={postIdForView !== null}
-//           onHide={handleCloseViewModal}
-//           size='lg' // Bootstrap 사이즈 옵션 사용
-//           className='custom-modal' // 커스텀 CSS 클래스 추가
-//         >
-//           <Modal.Header closeButton>
-//             <Modal.Title>게시글</Modal.Title>
-//           </Modal.Header>
-//           <Modal.Body>
-//             <ViewPostModal postId={postIdForView} handleCloseModal={handleCloseViewModal} handelOpenEditModal={handleOpenEditModal} />
-//           </Modal.Body>
-//         </Modal>
-//       )}
-
-//       {postIdForEdit !== null && (
-//         <Modal // 게시물 수정 모달
-//           show={postIdForEdit !== null}
-//           onHide={handleCloseEditModal}
-//           size='lg' // Bootstrap 사이즈 옵션 사용
-//           className='custom-modal' // 커스텀 CSS 클래스 추가
-//         >
-//           <Modal.Header closeButton>
-//             <Modal.Title>게시글 수정</Modal.Title>
-//           </Modal.Header>
-//           <Modal.Body>
-//             <EditPostModal postId={postIdForEdit} handleCloseModal={handleCloseEditModal} />
-//           </Modal.Body>
-//         </Modal>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default Board;
 
 const Board = memo(({ postService, userId }) => {
   const [posts, setPosts] = useState([]);
-  const { user } = useAuth();
+  const [likes, setLikes] = useState({});
+  const [page, setPage] = useState(1);
+  const [displayedPosts, setDisplayedPosts] = useState([]);
+  const itemsPerPage = 8;
+  const [showWriteModal, setShowWriteModal] = useState(false);
+  const [postIdForView, setPostIdForView] = useState(null);
+  const [postIdForEdit, setPostIdForEdit] = useState(null);
 
-  console.log(user);
+  const handleCloseViewModal = () => setPostIdForView(null);
+  const handleCloseEditModal = () => setPostIdForEdit(null);
+  const handleOpenWriteModal = () => setShowWriteModal(true);
+  const handleCloseWriteModal = () => setShowWriteModal(false);
+
+  const handleOpenViewModal = (postId) => {
+    setPostIdForView(postId);
+    setPostIdForEdit(null);
+  };
+
+  const handleOpenEditModal = (postId) => {
+    setPostIdForEdit(postId);
+    setPostIdForView(null);
+  };
+
+  const paging = (pageNumber) => {
+    setPage(pageNumber);
+  };
+
+  const { user } = useAuth();
 
   useEffect(() => {
     postService
       .getPosts(userId)
       .then((posts) => {
-        console.log(posts);
         setPosts([...posts]);
+        posts.forEach((post) => {
+          postService
+            .getPostLike(post.id)
+            .then((likeCount) => {
+              setLikes((prevLikes) => ({
+                ...prevLikes,
+                [post.id]: likeCount,
+              }));
+            })
+            .catch(() => console.log('좋아요 받아오기 실패'));
+        });
       })
       .catch(() => console.log('getPosts Error'));
   }, [postService, user, userId]);
 
-  console.log(posts);
+  useEffect(() => {
+    if (Array.isArray(posts)) {
+      setDisplayedPosts(posts.slice((page - 1) * itemsPerPage, page * itemsPerPage));
+    } else {
+      setDisplayedPosts([]);
+    }
+  }, [posts, page]);
+
+  useEffect(() => {
+    if (!showWriteModal && !postIdForEdit) {
+      postService
+        .getPosts(userId)
+        .then((posts) => {
+          setPosts([...posts]);
+          setDisplayedPosts(posts.slice((page - 1) * itemsPerPage, page * itemsPerPage));
+        })
+        .catch(() => console.log('getPosts Error'));
+    }
+  }, [showWriteModal, postIdForEdit, postService, userId, page]);
+
+  const handlePostSaved = () => {
+    postService
+      .getPosts(userId)
+      .then((posts) => {
+        setPosts([...posts]);
+        setDisplayedPosts(posts.slice((page - 1) * itemsPerPage, page * itemsPerPage));
+      })
+      .catch(() => console.log('getPosts Error'));
+  };
+
+  const tagMapping = {
+    1: '광고',
+    2: '부정',
+    3: '소비',
+    4: '저축',
+    5: '수입',
+    6: '기타',
+  };
+
+  const getTagText = (tagNumber) => {
+    return tagMapping[tagNumber] || '알 수 없음';
+  };
+
+  const handlePostDeleted = (postId) => {
+    setPosts(posts.filter((post) => post.id !== postId));
+    setDisplayedPosts(posts.filter((post) => post.id !== postId).slice((page - 1) * itemsPerPage, page * itemsPerPage));
+  };
 
   return (
     <div className='board-container'>
       <p className='title'>커뮤니티</p>
-      <ul>
-        {posts.map((post) => (
-          <>
-            <li key={post.id}>
-              제목 : {post.title} <br />
-              태그 : {post.tag}
-              <br />
-              내용 : {post.text}
-              <br />
-              작성날짜 : {post.createdAt}
-              <br />
-              작성자 닉네임 : {post.nickname}
-              <br />
-              작성자 아이디 : {post.userId}
+      <div className='board-header'>
+        <p className='no'>No</p>
+        <p className='category'>카테고리</p>
+        <p className='post-title'>제목</p>
+        <p className='nick'>글쓴이</p>
+        <p className='time'>작성시간</p>
+        <p className='like'>좋아요</p>
+      </div>
+      <ul className='board-list'>
+        {displayedPosts && displayedPosts.length > 0 ? (
+          displayedPosts.map((post, index) => (
+            <li className='board-item' key={post.id} onClick={() => handleOpenViewModal(post.id)}>
+              <p className='no'>{(page - 1) * itemsPerPage + index + 1}</p>
+              <p className='category'>{getTagText(post.tag)}</p>
+              <p className='post-title'>{post.title}</p>
+              <p className='nick'>{post.nickname}</p>
+              <p className='time'>{parseDate(post.createdAt)}</p>
+              <p className='like'>{likes[post.id] || 0}</p>
             </li>
-            <hr />
-          </>
-        ))}
+          ))
+        ) : (
+          <li>게시글이 없습니다</li>
+        )}
       </ul>
+      <div className='bottomSection'>
+        <Button className='writeButton' onClick={handleOpenWriteModal}>
+          글쓰기
+        </Button>
+      </div>
+
+      <div className='paginationContainer'>
+        <Pagination
+          activePage={page}
+          itemsCountPerPage={itemsPerPage}
+          totalItemsCount={posts.length}
+          pageRangeDisplayed={5}
+          prevPageText={'‹'}
+          nextPageText={'›'}
+          onChange={paging}
+          innerClass='pagination'
+          itemClass='page-item'
+          linkClass='page-link'
+          activeClass='active'
+          activeLinkClass='active-link'
+        />
+      </div>
+      <Modal show={showWriteModal} onHide={handleCloseWriteModal} size='lg' className='custom-modal'>
+        <Modal.Header closeButton>
+          <Modal.Title className='postBtn'>글쓰기</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <WritePostModal
+            handleCloseModal={handleCloseWriteModal}
+            postService={postService}
+            userId={user.id}
+            onPostSaved={handlePostSaved}
+          />
+        </Modal.Body>
+      </Modal>
+      {postIdForView !== null && (
+        <Modal show={postIdForView !== null} onHide={handleCloseViewModal} size='lg' className='custom-modal'>
+          <Modal.Header closeButton>
+            <Modal.Title>게시글</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <ViewPostModal
+              postId={postIdForView}
+              handleCloseModal={handleCloseViewModal}
+              postService={postService}
+              handleOpenEditModal={handleOpenEditModal}
+              onPostSaved={handlePostSaved}
+              handlePostDeleted={handlePostDeleted}
+            />
+          </Modal.Body>
+        </Modal>
+      )}
+      {postIdForEdit !== null && (
+        <Modal show={postIdForEdit !== null} onHide={handleCloseEditModal} size='lg' className='custom-modal'>
+          <Modal.Header closeButton>
+            <Modal.Title>게시글 수정</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <EditPostModal
+              postId={postIdForEdit}
+              handleCloseModal={handleCloseEditModal}
+              postService={postService}
+              onPostSaved={handlePostSaved}
+            />
+          </Modal.Body>
+        </Modal>
+      )}
     </div>
   );
 });

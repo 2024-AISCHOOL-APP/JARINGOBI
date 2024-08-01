@@ -1,126 +1,95 @@
-// 필요한 라이브러리 및 컴포넌트 가져오기
-import './ViewPostStyle.css'; // 커스텀 스타일
-
-import axios from 'axios';
+import './ViewPostStyle.css';
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS
-import { Card, Form } from 'react-bootstrap'; // 부트스트랩 컴포넌트
-import Swal from 'sweetalert2'; // SweetAlert2로 더 나은 알림 제공
+import { Card, Form } from 'react-bootstrap';
+import Swal from 'sweetalert2';
+import { useAuth } from '../context/AuthProvider';
 
+function ViewPostModal({ postId, handleCloseModal, handleOpenEditModal, postService, handlePostDeleted }) {
+  const { user } = useAuth();
+  const [post, setPost] = useState(null);
+  const [liked, setLiked] = useState(false);
 
-function ViewPostModal({ postId, handleCloseModal, handelOpenEditModal }) { 
+  useEffect(() => {
+    postService.getPostById(postId).then((post) => {
+      setPost(post);
+    });
+  }, [postId, postService]);
 
-    const [post, setPost] = useState([]); // 서버로부터 게시글 정보 받기
-
-    // 서버로부터 게시글 받아오기
-    useEffect(() => {
-        const getPost = async () => {
-            try {
-                console.log('특정 게시판 보기 요청:', postId);
-
-                const response1 = await axios.get(`http://localhost:8000/community/${postId}`); // API 엔드포인트 확인
-
-                console.log('게시글 목록 응답 수신:', response1.data);
-                setPost(response1.data); // 서버가 변환한 데이터를 post 변수에 저장
-
-            } catch (error) {
-                console.error('게시글 세부내용 요청 오류:', error);
-                alert('게시글 세부 내용을 불러오는 과정에서 오류가 발생하였습니다.');
-            }
-        };
-            getPost();
-    }, [postId]);
-
-
-  // 게시글을 삭제하는 함수
   const deletePost = async () => {
-
-    // 게시글을 쓴 사용자 본인이 아닐 경우 경고
-    if (post.id !== postId) {
-      Swal.fire({
-        icon: 'warning',
-        title: '경고',
-        text: '작성자 본인만 삭제 가능합니다.'
-      });
-      return;
-    }
-
-    // 실제 삭제 로직 구현
     try {
-        const response2 = await axios.delete(`http://localhost:8000/community/${postId}`);
-        console.log('게시글 삭제:', response2.data);
-        handleCloseModal();
-    } catch (error) {
-        console.log('삭제 오류 발생:', error);
-        alert('게시글 삭제 과정에서 오류가 발생했습니다.');
-    };
-
-  };
-
-  // 게시글을 수정하는 함수
-  const editPost = () => {
-
-    // 게시글을 쓴 사용자 본인이 아닐 경우 경고
-    if (post.id !== postId) {
-        Swal.fire({
-          icon: 'warning',
-          title: '경고',
-          text: '작성자 본인만 수정 가능합니다.', // 본문이 비어있을 경우 메시지
-        });
-        return;
-      }
-
-
-    // 수정 버튼 클릭 시 수정 모달 창 열림
+      await postService.deletePost(postId);
+      Swal.fire('게시글 삭제 완료');
+      handlePostDeleted(postId);
       handleCloseModal();
-      if (postId === 'true' || postId === null) {
-        console.log('postId가 올바르지 않습니다.');
-      } else {
-        handelOpenEditModal(postId);
-      }
+    } catch (error) {
+      console.error('게시글 삭제 오류:', error);
+      Swal.fire('게시글 삭제 중 오류가 발생했습니다.');
+    }
   };
 
+  const editPost = () => {
+    handleCloseModal();
+    handleOpenEditModal(postId);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
+  };
+
+  const canEditOrDelete = post && user.id === post.userId;
+
+  const handleLike = async () => {
+    try {
+      setLiked(true);
+    } catch (error) {
+      console.error('좋아요 오류:', error);
+      Swal.fire('좋아요 처리 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
-    <div className="write-post-container">
-      {/* 글쓰기 폼 */}
-      <Card className="p-4 shadow-sm">
+    <div className='write-post-container'>
+      <Card className='p-4 shadow-sm'>
         <Form>
           {post && (
             <>
-              <Form.Label className="form-label">
-                    <small>작성자: {post.nickname} &nbsp; 작성일: {post.createdAt}</small>
+              <Form.Label className='form-label'>
+                <small>
+                  작성자: {post.nickname} &nbsp; 작성일: {formatDate(post.createdAt)}
+                </small>
               </Form.Label>
-              <Form.Group controlId="formTitle" className="mb-4">
-                  <div className="post-title">{post.title}</div>
+              <Form.Group controlId='formTitle' className='mb-4'>
+                <div className='view-title'>{post.title}</div>
               </Form.Group>
-              <Form.Group controlId="formContent" className="mb-4">
-                  <div className="post-content">{post.text}</div>
+              <Form.Group controlId='formContent' className='mb-4'>
+                <div className='post-content'>{post.text}</div>
               </Form.Group>
-              <div className="d-flex justify-content-end align-items-center">
-                <Button
-                  onClick={deletePost}
-                  className="deleteButton"
-                  variant="outline-danger"
-                >
-                  삭제
-                </Button>&ensp;
-
-                <Button
-                  onClick={editPost}
-                  className="reWriteButton"
-                  variant="primary"
-                >
-                  수정
-                </Button>
-              </div>
+              {canEditOrDelete && (
+                <div className='d-flex justify-content-end align-items-center'>
+                  <Button onClick={handleLike} className={`likeButton ${liked ? 'liked' : ''}`}>
+                    {liked ? '좋아요 취소' : '♥️'}
+                  </Button>
+                  <Button onClick={deletePost} className='deleteButton' variant='outline-danger'>
+                    삭제
+                  </Button>
+                  &ensp;
+                  <Button onClick={editPost} className='reWriteButton' variant='primary'>
+                    수정
+                  </Button>
+                </div>
+              )}
             </>
           )}
         </Form>
       </Card>
     </div>
-
   );
 }
 

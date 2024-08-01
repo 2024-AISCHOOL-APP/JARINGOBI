@@ -47,3 +47,7 @@
   padding: 15px 5px;
   margin-left: 20px;
 }
+
+.active-menulink {
+  font-weight: bold;
+}

@@ -1,53 +1,40 @@
-// EditPostModal.js
-import './WritePostStyle.css'; // 커스텀 스타일
-
-import axios from 'axios';
+import './WritePostStyle.css';
 import React, { useState, useRef, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import 'bootstrap/dist/css/bootstrap.min.css'; // 부트스트랩 CSS
-import { Card, Form, Spinner } from 'react-bootstrap'; // 부트스트랩 컴포넌트
-import Swal from 'sweetalert2'; // SweetAlert2로 더 나은 알림 제공
+import { Card, Form, Spinner } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
+function EditPostModal({ postId, handleCloseModal, postService, onPostSaved }) {
+  const [topic, setTopic] = useState('');
+  const [section, setSection] = useState('');
+  const [inputSubject, setInputSubject] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [tagged, setTagged] = useState(false);
+  const [showTagButton, setShowTagButton] = useState(false);
 
-function EditPostModal({ postId, handleCloseModal }) {
+  const titleRef = useRef();
+  const contentRef = useRef();
 
-  // const [post, setPost] = useState({
-  //   title : '',
-  //   text: ''
-  // }); 
-
-  const [topic, setTopic] = useState(''); // 수정할 제목 상태
-  const [section, setSection] = useState(''); // 수정할 본문 상태
-  const [inputSubject, setInputSubject] = useState(''); // 태그 분류 결과 상태
-  const [loading, setLoading] = useState(false); // 로딩 상태 (Spinner)
-  const [tagged, setTagged] = useState(false); // 태그 완료 여부 상태
-  const [showTagButton, setShowTagButton] = useState(false); // 태그 버튼 가시성 상태
-
-  const titleRef = useRef(); // 제목 입력 참조
-  const contentRef = useRef(); // 본문 입력 참조
-
-  // 서버로부터 게시글 받아오기
   useEffect(() => {
     const getPost = async () => {
-        try {
-            console.log('특정 게시글 보기 요청:', postId);
-            const response = await axios.get(`http://localhost:8000/community/${postId}`); // API 엔드포인트 확인
-
-            console.log('특정 게시글 응답 수신:', response.data);
-            setTopic(response.data.title); // 제목 상태 저장
-            setSection(response.data.text); // 본문 상태 저장
-
-        } catch (error) {
-            console.error('게시글 세부내용 요청 오류:', error);
-            alert('게시글 세부 내용을 불러오는 과정에서 오류가 발생하였습니다.');
-        }
+      try {
+        postService.getPostById(postId).then((post) => {
+          setTopic(post.title);
+          setSection(post.text);
+        });
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: '오류',
+          text: '게시글 세부 내용을 불러오는 과정에서 오류가 발생하였습니다.',
+        });
+      }
     };
-        getPost();
-  }, [postId]);
+    getPost();
+  }, [postId, postService]);
 
   const handleClear = () => {
-    if (titleRef.current) titleRef.current.value = ''; // 제목 초기화
-    if (contentRef.current) contentRef.current.value = ''; // 본문 초기화
+    setTopic('');
     setSection('');
     setInputSubject('');
     setShowTagButton(false);
@@ -55,7 +42,6 @@ function EditPostModal({ postId, handleCloseModal }) {
   };
 
   const savePost = async () => {
-    // 제목이 비어있을 경우 경고 메시지 출력
     if (topic.trim() === '') {
       Swal.fire({
         icon: 'warning',
@@ -65,7 +51,6 @@ function EditPostModal({ postId, handleCloseModal }) {
       return;
     }
 
-    // 본문이 비어있을 경우 경고 메시지 출력
     if (section.trim() === '') {
       Swal.fire({
         icon: 'warning',
@@ -75,7 +60,6 @@ function EditPostModal({ postId, handleCloseModal }) {
       return;
     }
 
-    // 태그가 완료되지 않았을 경우 알림
     if (!tagged) {
       Swal.fire({
         icon: 'warning',
@@ -84,24 +68,39 @@ function EditPostModal({ postId, handleCloseModal }) {
       });
       return;
     }
-
-    try { // 서버로 수정한 게시글 전송해 갱신하기, 임시 테스트용 tag 및 userId 할당 
-      await axios.put(`http://localhost:8000/community/${postId}`, {
-        title: titleRef.current.value,
-        text: contentRef.current.value,
-        tag : 2,
-        userId : 100
-      });
-
+    try {
+      let subject;
+      switch (inputSubject) {
+        case '광고':
+          subject = 1;
+          break;
+        case '부정':
+          subject = 2;
+          break;
+        case '소비':
+          subject = 3;
+          break;
+        case '저축':
+          subject = 4;
+          break;
+        case '수입':
+          subject = 5;
+          break;
+        case '기타':
+          subject = 6;
+          break;
+        default:
+      }
+      postService.updatePost(postId, section, topic, subject);
       Swal.fire({
         icon: 'success',
         title: '성공',
         text: '게시글이 수정되었습니다.',
       });
+      onPostSaved();
 
-      handleCloseModal(); // 수정 후 모달 닫기
+      handleCloseModal();
     } catch (error) {
-      console.error('게시글 수정 오류:', error);
       Swal.fire({
         icon: 'error',
         title: '오류',
@@ -116,8 +115,8 @@ function EditPostModal({ postId, handleCloseModal }) {
     setLoading(true);
 
     const formData = {
-      topic: topic,
-      section: section,
+      topic,
+      section,
     };
 
     try {
@@ -137,7 +136,6 @@ function EditPostModal({ postId, handleCloseModal }) {
       setInputSubject(data.subject);
       setTagged(true);
     } catch (error) {
-      console.error('Error:', error);
       Swal.fire({
         icon: 'error',
         title: '오류',
@@ -157,29 +155,29 @@ function EditPostModal({ postId, handleCloseModal }) {
   };
 
   return (
-    <div className="write-post-container">
-      <Card className="p-4 shadow-sm">
+    <div className='write-post-container'>
+      <Card className='p-4 shadow-sm'>
         <Form>
-          <Form.Group controlId="formTitle" className="mb-4">
-            <Form.Label className="form-label">제목</Form.Label>
+          <Form.Group controlId='formTitle' className='mb-4'>
+            <Form.Label className='form-label'>제목</Form.Label>
             <Form.Control
-              type="text"
+              type='text'
               ref={titleRef}
-              placeholder="제목 입력"
+              placeholder='제목 입력'
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-              className="titleInput"
+              className='titleInput'
             />
           </Form.Group>
-          <Form.Group controlId="formContent" className="mb-4">
-            <div className="d-flex align-items-center mb-2">
-              <Form.Label className="me-2 form-label">본문</Form.Label>
+          <Form.Group controlId='formContent' className='mb-4'>
+            <div className='d-flex align-items-center mb-2'>
+              <Form.Label className='me-2 form-label'>본문</Form.Label>
               {showTagButton && !inputSubject && (
-                <div className="d-flex align-items-center">
+                <div className='d-flex align-items-center'>
                   <Button
                     onClick={tagClassification}
-                    className="tagButton"
-                    variant="outline-secondary"
+                    className='tagButton'
+                    variant='outline-secondary'
                     style={{
                       width: '100px',
                       height: '35px',
@@ -191,51 +189,39 @@ function EditPostModal({ postId, handleCloseModal }) {
                   >
                     태그분류
                   </Button>
-                  <div className="ms-3 d-flex align-items-center">
+                  <div className='ms-3 d-flex align-items-center'>
                     {loading && (
-                      <Spinner animation="border" role="status" className="me-2">
-                        <span className="visually-hidden">Loading...</span>
+                      <Spinner animation='border' role='status' className='me-2'>
+                        <span className='visually-hidden'>Loading...</span>
                       </Spinner>
                     )}
                   </div>
                 </div>
               )}
               {!loading && inputSubject && (
-                <div className="ms-3">
-                  <h5 className="me-2">{inputSubject}</h5> {/* 태그 결과 표시 */}
+                <div className='ms-3'>
+                  <h5 className='me-2'>{inputSubject}</h5>
                 </div>
               )}
             </div>
             <Form.Control
-              as="textarea"
+              as='textarea'
               rows={10}
               ref={contentRef}
-              placeholder="본문 입력"
+              placeholder='본문 입력'
               value={section}
               onChange={handleContentChange}
-              className="contentInput"
+              className='contentInput'
             />
           </Form.Group>
-          <div className="d-flex justify-content-end align-items-center">
-            <Button
-              onClick={handleCloseModal}
-              className="removeButton me-2"
-              variant="outline-secondary"
-            >
+          <div className='d-flex justify-content-end align-items-center'>
+            <Button onClick={handleCloseModal} className='removeButton me-2' variant='outline-secondary'>
               취소
             </Button>
-            <Button
-              onClick={handleClear}
-              className="resetButton me-2"
-              variant="outline-danger"
-            >
+            <Button onClick={handleClear} className='resetButton me-2' variant='outline-danger'>
               초기화
             </Button>
-            <Button
-              onClick={savePost}
-              className="saveButton"
-              variant="primary"
-            >
+            <Button onClick={savePost} className='saveButton' variant='primary'>
               갱신
             </Button>
           </div>

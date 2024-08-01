@@ -10,9 +10,11 @@ import { Container } from 'react-bootstrap';
 import AccountModal from './AccountModal';
 import AccountList from './AccountList';
 import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 
 function Calendar({ accountService }) {
+    const navigate = useNavigate();
     const { user } = useAuth();
     const [modalState, setModalState] = useState({ isOpen: false, type: null }); 
     const [selectedDate, setSelectedDate] = useState(""); 
@@ -26,7 +28,7 @@ function Calendar({ accountService }) {
 
     useEffect(() => {
         accountService
-            .getAccounts(user.userId, currentYear, currentMonth)
+            .getAccounts(user.userId, currentYear, currentMonth, 0)
             .then((accounts) => {
                 setAccountsMonth([...accounts]);
             })
@@ -64,12 +66,16 @@ function Calendar({ accountService }) {
         // 선택한 날짜에 해당하는 이벤트 필터링
         eventsForDate = events.filter(event => event.start === clickedDate);
         setFilteredEvents(eventsForDate); // 필터링된 이벤트를 상태로 설정
-        console.log(eventsForDate);
     };
 
     // 모달 닫기 핸들러
     const handleCloseModal = () => {
         setModalState({ isOpen: false, type: null }); // 모달창 닫기
+        accountService
+        .getAccounts(user.userId, currentYear, currentMonth, 0)
+        .then((accounts) => {
+            setAccountsMonth([...accounts]);
+        })
     };
 
     // 이벤트 추가 핸들러
@@ -110,7 +116,6 @@ function Calendar({ accountService }) {
         const clickedDate = info.event.startStr;
         eventsForDate = events.filter(event => event.start === clickedDate);
         setFilteredEvents(eventsForDate); // 필터링된 이벤트를 상태로 설정
-        console.log(eventsForDate);
         if (!info.event.title) {
             setSelectedEvent({
                 title: info.event.title,
@@ -169,6 +174,7 @@ function Calendar({ accountService }) {
                     memoRef={selectedEvent.memo}
                     selectRef={selectRef}
                     selectedEvent={selectedEvent} // 추가
+                    accountService={accountService}
                 />
             )}
 
@@ -180,6 +186,7 @@ function Calendar({ accountService }) {
                     titleRef={selectedEvent.title}
                     moneyRef={selectedEvent.money}
                     events={filteredEvents} // 필터링된 이벤트 목록 전달
+                    accountService={accountService}
                 />
             )}
         </div>

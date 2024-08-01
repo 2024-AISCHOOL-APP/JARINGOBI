@@ -62,7 +62,7 @@ const Dashboard = ({ accountService }) => {
 
   useEffect(() => {
     accountService
-      .getAccounts(user.userId, currentYear, currentMonth)
+      .getAccounts(user.userId, currentYear, currentMonth, 0)
       .then((accounts) => {
         setAccountsMonth([...accounts]);
       })
@@ -129,7 +129,7 @@ const Dashboard = ({ accountService }) => {
 
   const getAccountYearInfo = async () => {
     accountService
-      .getAccounts(user.userId, currentYear, 0)
+      .getAccounts(user.userId, currentYear, 0, 0)
       .then((accounts) => {
         setAccountsYear([...accounts]);
       })
@@ -138,8 +138,6 @@ const Dashboard = ({ accountService }) => {
   useEffect(() => {
     if (accountsYear) {
       const yearData = formatMonthlyStatistics(calculateMonthlyStatistics(accountsYear));
-      console.log(yearData);
-
       const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
       const incomeData = months.map(month => yearData[month]?.수입?.total || 0);
       const expenseData = months.map(month => yearData[month]?.지출?.total || 0);

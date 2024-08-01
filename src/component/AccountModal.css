@@ -1,0 +1,15 @@
+.account-modal .modal-content {
+    border-radius: 8px; /* 모달 테두리를 둥글게 설정 */
+    padding: 20px; 
+    /* 모달 내 여백을 넓혀 더 시각적으로 만족스러운 레이아웃 제공 */
+}
+
+.form-control {
+    margin-bottom: 10px; 
+    /* 입력 요소 간의 간격 조정 */
+}
+
+textarea.eventTextInput {
+    resize: none; /* 사용자가 텍스트 영역의 크기를 조정할 수 없도록 설정 */
+    width: 100%; /* 텍스트 영역이 할당된 열을 꽉 채우도록 설정 */
+}
